@@ -8,7 +8,7 @@ import javax.swing.SwingUtilities;
 
 /**
  *
- * @author frederic
+ * @author hehe
  */
 public class Main {
 
