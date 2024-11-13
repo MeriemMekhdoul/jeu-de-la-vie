@@ -27,7 +27,9 @@ public class Environnement extends Observable implements Runnable {
         return null;
     }
 
-
+    public int getNbCases(Case source) {
+        return 0;
+    }
     public Environnement(int _sizeX, int _sizeY) {
 
         sizeX = _sizeX;
@@ -38,7 +40,7 @@ public class Environnement extends Observable implements Runnable {
 
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
-                Case c = new Case();
+                Case c = new Case(this);
                 tab[i][j] = c;
                 mapDonnees.put(c,i);
             }
