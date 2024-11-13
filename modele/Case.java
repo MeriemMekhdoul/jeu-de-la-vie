@@ -6,7 +6,7 @@ import java.util.Random;
 public class Case {
 
     private boolean state;
-    private Environnement env;
+    private final Environnement env;
 
     public Case(Environnement _env)
     {

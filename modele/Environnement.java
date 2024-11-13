@@ -10,9 +10,6 @@ public class Environnement extends Observable implements Runnable {
     private final int sizeX;
     private final int sizeY;
 
-    public int getNbCases(Case source) {
-        return 0;
-    }
     public Environnement(int _sizeX, int _sizeY) {
 
         sizeX = _sizeX;
