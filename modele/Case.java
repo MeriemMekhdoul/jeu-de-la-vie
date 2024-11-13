@@ -6,6 +6,7 @@ import java.util.Random;
 public class Case {
 
     private boolean state;
+    private boolean nextState;
     private final Environnement env;
 
     public Case(Environnement _env)
@@ -16,7 +17,6 @@ public class Case {
     private static final Random rnd = new Random();
 
     public boolean getState() {
-
         return state;
     }
 
@@ -27,11 +27,19 @@ public class Case {
 
     public void nextState() {
         int nb=env.getNbCases(this);
+        System.out.println("Case a la position " + env.getPos(this) + " nbvoisins vivants = " + nb);
         if (!state && nb==3) {
-            state = true;
+            nextState = true;
         } else {
             if (state && !(nb == 2 || nb == 3)) // Si la case est vivante est qu'elle n'est ni égale à deux ou trois, elle meurt, la condition de survie n'est pas nécessaire
-                state = false;
+                nextState = false;
         }
     }
+
+    public void updateState(){
+        state = nextState;
+    }
+
+
+
 }

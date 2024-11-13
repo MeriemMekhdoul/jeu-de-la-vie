@@ -5,7 +5,7 @@ public class Position {
     private int y;
 
     public Position(int _x, int _y){
-        x = _y;
+        x = _x;
         y = _y;
     }
 
@@ -15,5 +15,10 @@ public class Position {
 
     public int getY() {
         return y;
+    }
+
+    @Override
+    public String toString(){
+        return "x = " + x + " y = " + y;
     }
 }

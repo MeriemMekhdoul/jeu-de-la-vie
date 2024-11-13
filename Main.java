@@ -21,13 +21,14 @@ public class Main {
 			public void run(){
 
 				Environnement e = new Environnement(10, 10);
+				System.out.println("IsMAIN?");
 
 				FenetrePrincipale fenetre = new FenetrePrincipale(e);
 				fenetre.setVisible(true);
 
 				e.addObserver(fenetre);
-
-				Ordonnanceur o = new Ordonnanceur(500, e);
+				System.out.println("IsFENETRE?");
+				Ordonnanceur o = new Ordonnanceur(5000, e);
 				o.start();
 
 			}

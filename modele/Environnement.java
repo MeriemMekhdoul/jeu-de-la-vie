@@ -25,6 +25,14 @@ public class Environnement extends Observable implements Runnable {
                 mapDonnees.put(c, new Position(i, j));
             }
         }
+        System.out.println("print hashmap");
+        // Pour afficher le contenu de la HashMap
+        for (Map.Entry<Case, Position> entry : mapDonnees.entrySet()) {
+            Case key = entry.getKey();
+            Position value = entry.getValue();
+            System.out.println("Case: " + key + ", Position: " + value);
+        }
+
     }
 
     public int getSizeX() {
@@ -41,7 +49,26 @@ public class Environnement extends Observable implements Runnable {
                 tab[i][j].rndState();
             }
         }
+    }
+    public void nextState() {
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++) {
+                //System.out.println();
+                tab[i][j].nextState();
+            }
+        }
+    }
+    public void updateState() {
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++) {
+                //System.out.println();
+                tab[i][j].updateState();
+            }
+        }
+    }
 
+    public Position getPos(Case cell){
+        return new Position(mapDonnees.get(cell).getX(),mapDonnees.get(cell).getY());
     }
 
     public boolean getState(int x, int y) {
@@ -51,7 +78,8 @@ public class Environnement extends Observable implements Runnable {
     public int getNbCases(Case source) {
         int somme = 0;
         for (Direction d : Direction.values()) {
-            if (getCase(source, d).getState()) {
+            Case c = getCase(source,d);
+            if (c!= null && c.getState()) {
                 somme++;
             }
         }
@@ -69,61 +97,61 @@ public class Environnement extends Observable implements Runnable {
         Position pos = mapDonnees.get(source);
         int x = pos.getX();
         int y = pos.getY();
+        System.out.println("POS =" + pos + " direction = " + d.toString());
 
         //vérifier si la position n'est pas en dehors du tableau
         switch (d) {
             case h -> {
                 if (y > 0)
                     return tab[x][y - 1];
-                throw new IndexOutOfBoundsException();
             }
             case hd -> {
                 if (y > 0 && (x < sizeX - 1))
                     return tab[x + 1][y - 1];
-                throw new IndexOutOfBoundsException();
+                //throw new IndexOutOfBoundsException();
             }
             case d -> {
                 if (x < sizeX - 1)
                     return tab[x + 1][y];
-                throw new IndexOutOfBoundsException();
+                //throw new IndexOutOfBoundsException();
             }
             case db -> {
                 if (x < sizeX - 1 && (y < sizeY - 1))
                     return tab[x + 1][y + 1];
-                throw new IndexOutOfBoundsException();
+                // new IndexOutOfBoundsException();
             }
             case b -> {
                 if (y < sizeY - 1)
                     return tab[x][y + 1];
-                throw new IndexOutOfBoundsException();
+                //throw new IndexOutOfBoundsException();
             }
             case bg -> {
                 if (x > 0 && (y < sizeY - 1))
                     return tab[x - 1][y + 1];
-                throw new IndexOutOfBoundsException();
+                //throw new IndexOutOfBoundsException();
             }
             case g -> {
                 if (x > 0)
                     return tab[x - 1][y];
-                throw new IndexOutOfBoundsException();
+                //throw new IndexOutOfBoundsException();
             }
             case gh -> {
                 if (x > 0 && y > 0)
                     return tab[x - 1][y - 1];
-                throw new IndexOutOfBoundsException();
-            }
-            default -> {
-                return null;
+                //throw new IndexOutOfBoundsException();
             }
         }
+        return null;
     }
-
 
     @Override
     public void run() {
-        rndState();
+        //rndState();
+        nextState();
+        updateState();
         // notification de l'observer
         setChanged();
         notifyObservers();
+        System.out.println("/////////////////////////////////////////////");
     }
 }

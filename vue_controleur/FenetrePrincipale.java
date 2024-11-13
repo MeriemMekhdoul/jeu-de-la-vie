@@ -99,8 +99,6 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 } else {
                     tab[i][j].setBackground(Color.WHITE);
                 }
-
-                System.out.println("hello");
             }
 
         }
