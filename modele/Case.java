@@ -26,14 +26,15 @@ public class Case {
     }
 
     public void nextState() {
-        int nb=env.getNbCases(this);
-        System.out.println("Case a la position " + env.getPos(this) + " nbvoisins vivants = " + nb);
+        int nb = env.getNbCases(this);
         if (!state && nb==3) {
             nextState = true;
         } else {
-            if (state && !(nb == 2 || nb == 3)) // Si la case est vivante est qu'elle n'est ni égale à deux ou trois, elle meurt, la condition de survie n'est pas nécessaire
+            if (nb < 2 || nb > 3) // Si la case est vivante et qu'elle n'est ni égale à deux ou trois, elle meurt, la condition de survie n'est pas nécessaire
                 nextState = false;
+            else nextState = state; //stays the same!!!!!!!!
         }
+        System.out.println("Case a la position " + env.getPos(this) + " | nbvoisins vivants = " + nb + " | state = " + state + " | nextState = " + nextState);
     }
 
     public void updateState(){

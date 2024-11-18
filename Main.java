@@ -6,10 +6,8 @@ import vue_controleur.FenetrePrincipale;
 
 import javax.swing.SwingUtilities;
 
-/**
- *
- * @author hehe
- */
+import static java.lang.Thread.sleep;
+
 public class Main {
 
     /**
@@ -20,15 +18,13 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
 
-				Environnement e = new Environnement(10, 10);
-				System.out.println("IsMAIN?");
+				Environnement e = new Environnement(4, 4);
 
 				FenetrePrincipale fenetre = new FenetrePrincipale(e);
 				fenetre.setVisible(true);
-
 				e.addObserver(fenetre);
-				System.out.println("IsFENETRE?");
-				Ordonnanceur o = new Ordonnanceur(5000, e);
+
+				Ordonnanceur o = new Ordonnanceur(3000, e);
 				o.start();
 
 			}

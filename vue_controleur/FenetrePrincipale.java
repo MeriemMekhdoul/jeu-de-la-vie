@@ -1,8 +1,4 @@
-package vue_controleur;/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
+package vue_controleur;
 
 
 import modele.Environnement;
@@ -21,11 +17,9 @@ import javax.swing.*;
 
 import javax.swing.border.Border;
 
+import static java.lang.Thread.sleep;
 
-/**
- *
- * @author frederic
- */
+
 public class FenetrePrincipale extends JFrame implements Observer {
 
     private JPanel[][] tab;
@@ -38,14 +32,14 @@ public class FenetrePrincipale extends JFrame implements Observer {
     }
 
     public void build() {
-        
+
         setTitle("Jeu de la Vie");
         setSize(600, 500);
-        
+
         // Panneau principal
         JPanel pan = new JPanel(new BorderLayout());
-        
-        
+
+
         // Panneau central
         JComponent pan1 = new JPanel (new GridLayout(env.getSizeX(),env.getSizeY()));
         tab = new JPanel[env.getSizeX()][env.getSizeY()];
@@ -56,26 +50,25 @@ public class FenetrePrincipale extends JFrame implements Observer {
         for(int i = 0; i<env.getSizeX();i++){
             for (int j = 0; j < env.getSizeY(); j++) {
                 tab[i][j] = new JPanel();
-
+                if (env.getState(i, j)) {
+                    tab[i][j].setBackground(Color.BLACK);
+                } else {
+                    tab[i][j].setBackground(Color.WHITE);
+                }
                 pan1.add(tab[i][j]);
             }
-
         }
-        
+
         // Panneau pour les boutons
         JPanel pan2 = new JPanel(new FlowLayout());
         pan2.add(new JButton("b1"));
         pan2.add(new JTextField("jt1"));
-        
-        
-        
+
         pan.add(pan1, BorderLayout.CENTER);
         pan.add(pan2, BorderLayout.EAST);
-        
-        setContentPane(pan);
-        
 
-        
+        setContentPane(pan);
+
         // Ajout Menu
         JMenuBar jm = new JMenuBar();
         JMenu m = new JMenu("Fichier");
@@ -83,26 +76,20 @@ public class FenetrePrincipale extends JFrame implements Observer {
         m.add(mi);
         jm.add(m);
         setJMenuBar(jm);
-        
-        
     }
 
 
     @Override
     public void update(Observable o, Object arg) {
-        // raffraîchissement de la vue
+        // rafraîchissement de la vue
         for(int i = 0; i<env.getSizeX();i++){
             for (int j = 0; j < env.getSizeY(); j++) {
                 if (env.getState(i, j)) {
-
                     tab[i][j].setBackground(Color.BLACK);
                 } else {
                     tab[i][j].setBackground(Color.WHITE);
                 }
             }
-
         }
-
-
     }
 }

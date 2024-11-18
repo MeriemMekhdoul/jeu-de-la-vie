@@ -1,8 +1,8 @@
 package modele;
 
 public class Position {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     public Position(int _x, int _y){
         x = _x;

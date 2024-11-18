@@ -30,7 +30,7 @@ public class Environnement extends Observable implements Runnable {
         for (Map.Entry<Case, Position> entry : mapDonnees.entrySet()) {
             Case key = entry.getKey();
             Position value = entry.getValue();
-            System.out.println("Case: " + key + ", Position: " + value);
+            System.out.println("Position: " + value + "     etat = " + key.getState());
         }
 
     }
@@ -68,7 +68,7 @@ public class Environnement extends Observable implements Runnable {
     }
 
     public Position getPos(Case cell){
-        return new Position(mapDonnees.get(cell).getX(),mapDonnees.get(cell).getY());
+        return mapDonnees.get(cell);
     }
 
     public boolean getState(int x, int y) {
@@ -94,55 +94,44 @@ public class Environnement extends Observable implements Runnable {
      */
 
     public Case getCase(Case source, Direction d) {
-        Position pos = mapDonnees.get(source);
+        Position pos = mapDonnees.get(source); // Obtenir la position actuelle
+        if (pos == null) {
+            return null; //si la position n'est pas trouvée
+        }
+
         int x = pos.getX();
         int y = pos.getY();
-        System.out.println("POS =" + pos + " direction = " + d.toString());
 
-        //vérifier si la position n'est pas en dehors du tableau
         switch (d) {
-            case h -> {
-                if (y > 0)
-                    return tab[x][y - 1];
+            case h -> { // Haut
+                if (y > 0) return tab[x][y - 1];
             }
-            case hd -> {
-                if (y > 0 && (x < sizeX - 1))
-                    return tab[x + 1][y - 1];
-                //throw new IndexOutOfBoundsException();
+            case hd -> { // Haut-droite
+                if (y > 0 && x < sizeX - 1) return tab[x + 1][y - 1];
             }
-            case d -> {
-                if (x < sizeX - 1)
-                    return tab[x + 1][y];
-                //throw new IndexOutOfBoundsException();
+            case d -> { // Droite
+                if (x < sizeX - 1) return tab[x + 1][y];
             }
-            case db -> {
-                if (x < sizeX - 1 && (y < sizeY - 1))
-                    return tab[x + 1][y + 1];
-                // new IndexOutOfBoundsException();
+            case db -> { // Bas-droite
+                if (x < sizeX - 1 && y < sizeY - 1) return tab[x + 1][y + 1];
             }
-            case b -> {
-                if (y < sizeY - 1)
-                    return tab[x][y + 1];
-                //throw new IndexOutOfBoundsException();
+            case b -> { // Bas
+                if (y < sizeY - 1) return tab[x][y + 1];
             }
-            case bg -> {
-                if (x > 0 && (y < sizeY - 1))
-                    return tab[x - 1][y + 1];
-                //throw new IndexOutOfBoundsException();
+            case bg -> { // Bas-gauche
+                if (x > 0 && y < sizeY - 1) return tab[x - 1][y + 1];
             }
-            case g -> {
-                if (x > 0)
-                    return tab[x - 1][y];
-                //throw new IndexOutOfBoundsException();
+            case g -> { // Gauche
+                if (x > 0) return tab[x - 1][y];
             }
-            case gh -> {
-                if (x > 0 && y > 0)
-                    return tab[x - 1][y - 1];
-                //throw new IndexOutOfBoundsException();
+            case gh -> { // Haut-gauche
+                if (x > 0 && y > 0) return tab[x - 1][y - 1];
             }
         }
-        return null;
+
+        return null; // Retourner null si hors limites
     }
+
 
     @Override
     public void run() {
