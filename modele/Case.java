@@ -20,10 +20,13 @@ public class Case {
         return state;
     }
 
-
+    public void switchState(){
+        state = !state;
+    }
     public void rndState() {
         state = rnd.nextBoolean();
     }
+
 
     public void nextState() {
         int nb = env.getNbCases(this);
