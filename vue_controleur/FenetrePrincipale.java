@@ -2,6 +2,7 @@ package vue_controleur;
 
 
 import modele.Environnement;
+import modele.MyColor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -9,6 +10,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Observable;
@@ -21,7 +24,7 @@ import static java.lang.Thread.sleep;
 
 
 public class FenetrePrincipale extends JFrame implements Observer {
-
+    boolean dessin =false;
     private JPanel[][] tab;
     Environnement env;
     public FenetrePrincipale(Environnement _env) {
@@ -29,6 +32,14 @@ public class FenetrePrincipale extends JFrame implements Observer {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         env = _env;
         build();
+    }
+    public void switchCase(int I, int J) {
+        env.getCase(I, J).switchState();
+        if (env.getState(I, J)) {
+            tab[I][J].setBackground(MyColor.PURPLE);
+        } else {
+            tab[I][J].setBackground(MyColor.GOLD);
+        }
     }
 
     public void build() {
@@ -41,30 +52,56 @@ public class FenetrePrincipale extends JFrame implements Observer {
 
 
         // Panneau central
-        JComponent pan1 = new JPanel (new GridLayout(env.getSizeX(),env.getSizeY()));
+        JComponent grid = new JPanel (new GridLayout(env.getSizeX(),env.getSizeY()));
         tab = new JPanel[env.getSizeX()][env.getSizeY()];
 
 
         Border blackline = BorderFactory.createLineBorder(Color.black,1);
-        pan1.setBorder(blackline);
+        grid.setBorder(blackline);
         for(int i = 0; i<env.getSizeX();i++){
             for (int j = 0; j < env.getSizeY(); j++) {
                 tab[i][j] = new JPanel();
                 if (env.getState(i, j)) {
-                    tab[i][j].setBackground(Color.BLACK);
+                    tab[i][j].setBackground(Color.DARK_GRAY);
                 } else {
-                    tab[i][j].setBackground(Color.WHITE);
+                    tab[i][j].setBackground(Color.LIGHT_GRAY);
                 }
-                pan1.add(tab[i][j]);
+                int I = i;
+                int J = j;
+                tab[i][j].addMouseListener(new MouseAdapter() {
+                    private Color background;
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        dessin=true;
+                        switchCase(I, J);
+                    }
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        dessin=false;
+                    }
+
+                    @Override
+                    public void mouseEntered (MouseEvent e){
+                        if  (dessin) {
+                            switchCase(I, J);
+                        }
+
+                    }
+
+                });
+
+                grid.add(tab[i][j]);
             }
         }
+
 
         // Panneau pour les boutons
         JPanel pan2 = new JPanel(new FlowLayout());
         pan2.add(new JButton("b1"));
         pan2.add(new JTextField("jt1"));
 
-        pan.add(pan1, BorderLayout.CENTER);
+        pan.add(grid, BorderLayout.CENTER);
         pan.add(pan2, BorderLayout.EAST);
 
         setContentPane(pan);
@@ -85,9 +122,9 @@ public class FenetrePrincipale extends JFrame implements Observer {
         for(int i = 0; i<env.getSizeX();i++){
             for (int j = 0; j < env.getSizeY(); j++) {
                 if (env.getState(i, j)) {
-                    tab[i][j].setBackground(Color.BLACK);
+                    tab[i][j].setBackground(MyColor.DARK_BLUE);
                 } else {
-                    tab[i][j].setBackground(Color.WHITE);
+                    tab[i][j].setBackground(MyColor.LIGHT_BLUE);
                 }
             }
         }

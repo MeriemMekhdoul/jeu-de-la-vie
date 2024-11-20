@@ -18,7 +18,7 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
 
-				Environnement e = new Environnement(4, 4);
+				Environnement e = new Environnement(50, 50);
 
 				FenetrePrincipale fenetre = new FenetrePrincipale(e);
 				fenetre.setVisible(true);

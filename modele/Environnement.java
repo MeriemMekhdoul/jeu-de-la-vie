@@ -70,9 +70,11 @@ public class Environnement extends Observable implements Runnable {
     public Position getPos(Case cell){
         return mapDonnees.get(cell);
     }
-
     public boolean getState(int x, int y) {
         return tab[x][y].getState();
+    }
+    public Case getCase(int x, int y) {
+        return tab[x][y];
     }
 
     public int getNbCases(Case source) {
