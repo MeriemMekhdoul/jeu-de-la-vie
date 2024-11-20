@@ -2,33 +2,61 @@ package vue_controleur;
 
 
 import modele.Environnement;
+import modele.Simulateur;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 
 import javax.swing.border.Border;
 
-import static java.lang.Thread.sleep;
-
-
 public class FenetrePrincipale extends JFrame implements Observer {
 
     private JPanel[][] tab;
+    private Simulateur sm;
     Environnement env;
-    public FenetrePrincipale(Environnement _env) {
+    public FenetrePrincipale(Environnement _env, Simulateur _sm) {
         super();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         env = _env;
+        sm = _sm;
         build();
+        requestFocusOnWindow();
+        addKeyBoardListener();
+    }
+
+    public void addKeyBoardListener() {
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                switch (keyCode) {
+                    case KeyEvent.VK_SPACE: {
+                        System.out.println("clicked on SPACE");
+                        sm.modeManuel();
+                        break;
+                    }
+                    case KeyEvent.VK_X: {
+                        System.out.println("clicked on X");
+                        sm.switchMode();
+                        break;
+                    }
+                    case KeyEvent.VK_S: {
+                        System.out.println("clicked on S");
+                        sm.stop();
+                        break;
+                    }
+                }
+            }
+        });
     }
 
     public void build() {
@@ -79,6 +107,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
     }
 
 
+
     @Override
     public void update(Observable o, Object arg) {
         // rafraîchissement de la vue
@@ -91,5 +120,11 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 }
             }
         }
+    }
+
+
+    public void requestFocusOnWindow() {
+        this.setFocusable(true);       // Rend la fenêtre éligible au focus
+        this.requestFocusInWindow();  // Demande le focus
     }
 }
