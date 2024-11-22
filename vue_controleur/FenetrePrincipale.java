@@ -60,6 +60,27 @@ public class FenetrePrincipale extends JFrame implements Observer {
                         sm.stop();
                         break;
                     }
+                    case KeyEvent.VK_R: {
+                        System.out.println("clicked on R");
+                        sm.reset();
+                        break;
+                    }
+                    case KeyEvent.VK_B: {
+                        System.out.println("clicked on R");
+                        sm.blank();
+                        break;
+                    }
+                    case KeyEvent.VK_H: {
+                        System.out.println("clicked on H");
+                        System.out.println("Helper for the keybinds");
+                        System.out.println("X: Switch between Manual and Auto mode");
+                        System.out.println("S: Stops the execution of the program (Supposedly)");
+                        System.out.println("R: Resets all cells to a random state");
+                        System.out.println("B: Blanks all cells");
+
+
+                        break;
+                    }
                 }
             }
         });

@@ -19,6 +19,9 @@ public class Case {
     public boolean getState() {
         return state;
     }
+    public void setState(boolean b) {
+        state=b;
+    }
 
     public void switchState(){
         state = !state;

@@ -50,6 +50,13 @@ public class Environnement extends Observable implements Runnable {
             }
         }
     }
+    public void blankState() {
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++) {
+                tab[i][j].setState(false);
+            }
+        }
+    }
     public void nextState() {
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
@@ -58,6 +65,7 @@ public class Environnement extends Observable implements Runnable {
             }
         }
     }
+
     public void updateState() {
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {

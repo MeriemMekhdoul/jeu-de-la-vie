@@ -24,6 +24,14 @@ public class Simulateur {
             ord.setModeAuto(true);
         }
     }
+    public void reset() {
+        env.rndState();
+        modeManuel();
+    }
+    public void blank() {
+        env.blankState();
+        modeManuel();
+    }
 
     public void stop() {
         System.out.println("stopping the execution");
