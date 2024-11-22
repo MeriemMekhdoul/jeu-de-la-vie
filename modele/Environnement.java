@@ -25,12 +25,12 @@ public class Environnement extends Observable implements Runnable {
                 mapDonnees.put(c, new Position(i, j));
             }
         }
-        System.out.println("print hashmap");
+        //System.out.println("print hashmap");
         // Pour afficher le contenu de la HashMap
         for (Map.Entry<Case, Position> entry : mapDonnees.entrySet()) {
             Case key = entry.getKey();
             Position value = entry.getValue();
-            System.out.println("Position: " + value + "     etat = " + key.getState());
+            //System.out.println("Position: " + value + "     etat = " + key.getState());
         }
 
     }
@@ -151,6 +151,6 @@ public class Environnement extends Observable implements Runnable {
         // notification de l'observer
         setChanged();
         notifyObservers();
-        System.out.println("/////////////////////////////////////////////");
+        //System.out.println("/////////////////////////////////////////////");
     }
 }

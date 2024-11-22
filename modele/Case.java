@@ -40,7 +40,7 @@ public class Case {
                 nextState = false;
             else nextState = state; //stays the same!!!!!!!!
         }
-        System.out.println("Case a la position " + env.getPos(this) + " | nbvoisins vivants = " + nb + " | state = " + state + " | nextState = " + nextState);
+        //System.out.println("Case a la position " + env.getPos(this) + " | nbvoisins vivants = " + nb + " | state = " + state + " | nextState = " + nextState);
     }
 
     public void updateState(){

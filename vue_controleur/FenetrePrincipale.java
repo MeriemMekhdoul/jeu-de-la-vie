@@ -46,7 +46,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 int keyCode = e.getKeyCode();
                 switch (keyCode) {
                     case KeyEvent.VK_SPACE: {
-                        System.out.println("clicked on SPACE");
+                        //System.out.println("clicked on SPACE");
                         sm.modeManuel();
                         break;
                     }
@@ -73,12 +73,11 @@ public class FenetrePrincipale extends JFrame implements Observer {
                     case KeyEvent.VK_H: {
                         System.out.println("clicked on H");
                         System.out.println("Helper for the keybinds");
+                        System.out.println("Spacebar: Switches to Manual and goes to the next state");
                         System.out.println("X: Switch between Manual and Auto mode");
                         System.out.println("S: Stops the execution of the program (Supposedly)");
                         System.out.println("R: Resets all cells to a random state");
                         System.out.println("B: Blanks all cells");
-
-
                         break;
                     }
                 }
