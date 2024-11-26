@@ -60,4 +60,14 @@ public class Ordonnanceur extends Thread {
     public void setModeAuto(boolean etat) {
         modeAuto = etat;
     }
+
+    public long getSleepTime() {
+        return sleepTime;
+    }
+
+    public void setSleepTime(long sleepTime) {
+        this.sleepTime = sleepTime;
+    }
+
+
 }

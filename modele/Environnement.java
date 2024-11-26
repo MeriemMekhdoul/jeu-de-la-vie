@@ -151,6 +151,5 @@ public class Environnement extends Observable implements Runnable {
         // notification de l'observer
         setChanged();
         notifyObservers();
-        //System.out.println("/////////////////////////////////////////////");
     }
 }

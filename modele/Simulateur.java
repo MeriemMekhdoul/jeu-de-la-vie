@@ -1,7 +1,7 @@
 package modele;
 
 public class Simulateur {
-
+    public static int simulationSpeed = 100; // Valeur par défaut
     private Environnement env;
     private Ordonnanceur ord;
 
@@ -36,5 +36,14 @@ public class Simulateur {
     public void stop() {
         System.out.println("stopping the execution");
         ord.setExit(true); // Arrête l'exécution
+    }
+
+
+    public long getSleepTime() {//TODO: useless
+        return ord.getSleepTime();
+    }
+
+    public void setSleepTime(long sleepTime) {
+        ord.setSleepTime(sleepTime);
     }
 }

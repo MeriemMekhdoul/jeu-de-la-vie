@@ -7,7 +7,6 @@ import vue_controleur.FenetrePrincipale;
 
 import javax.swing.SwingUtilities;
 
-import static java.lang.Thread.sleep;
 
 public class Main {
 
@@ -16,8 +15,8 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
 
-				Environnement e = new Environnement(15, 15);
-				Ordonnanceur o = new Ordonnanceur(3000, e);
+				Environnement e = new Environnement(30, 30);
+				Ordonnanceur o = new Ordonnanceur(Simulateur.simulationSpeed, e);
 
 				Simulateur s = new Simulateur(e,o);
 
