@@ -5,6 +5,7 @@ import modele.Environnement;
 import modele.Simulateur;
 import modele.MyColor;
 
+import java.math.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -92,6 +93,8 @@ public class FenetrePrincipale extends JFrame implements Observer {
         }
     }
 
+
+
     public void build() {
 
         setTitle("Jeu de la Vie");
@@ -113,9 +116,9 @@ public class FenetrePrincipale extends JFrame implements Observer {
             for (int j = 0; j < env.getSizeY(); j++) {
                 tab[i][j] = new JPanel();
                 if (env.getState(i, j)) {
-                    tab[i][j].setBackground(Color.DARK_GRAY);
+                    tab[i][j].setBackground(MyColor.DARK_BLUE);
                 } else {
-                    tab[i][j].setBackground(Color.LIGHT_GRAY);
+                    tab[i][j].setBackground(MyColor.LIGHT_BLUE);
                 }
                 int I = i;
                 int J = j;
@@ -188,9 +191,9 @@ public class FenetrePrincipale extends JFrame implements Observer {
         menuPanel.add(Box.createVerticalStrut(20)); // Espace supplémentaire
 
         // Slider pour gérer la vitesse
-        JSlider speedSlider = new JSlider(0, 2000, Simulateur.simulationSpeed); //TODO: mettre des constantes
+        JSlider speedSlider = new JSlider(0, 100, 50); //TODO: mettre des constantes
         speedSlider.setFocusable(false);
-        speedSlider.setMajorTickSpacing(500);
+        speedSlider.setMajorTickSpacing(25);
         speedSlider.setPaintTicks(true);
         speedSlider.setPaintLabels(true);
         menuPanel.add(new JLabel("Vitesse:"));
@@ -198,9 +201,10 @@ public class FenetrePrincipale extends JFrame implements Observer {
         menuPanel.add(Box.createVerticalStrut(20));
 
         speedSlider.addChangeListener(e -> {
-            int simulationSpeed = speedSlider.getValue(); // Mettre à jour la vitesse
-            sm.setSleepTime(simulationSpeed);
-            System.out.println("Vitesse de simulation : " + simulationSpeed);
+            float simulationSpeed = speedSlider.getValue(); // Mettre à jour la vitesse
+
+            sm.setSleepTime(sm.speedCurve(simulationSpeed));
+            System.out.println("Vitesse de simulation : " + sm.speedCurve(simulationSpeed));
         });
 
 

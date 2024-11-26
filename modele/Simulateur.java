@@ -1,7 +1,7 @@
 package modele;
 
 public class Simulateur {
-    public static int simulationSpeed = 100; // Valeur par défaut
+    public static int simulationSpeed = 270; // Valeur par défaut
     private Environnement env;
     private Ordonnanceur ord;
 
@@ -15,6 +15,10 @@ public class Simulateur {
             ord.setModeAuto(false); // Désactive le mode automatique
         }
         ord.runManuel(); // Exécute une tâche manuelle
+    }
+
+    public int speedCurve(float x){
+        return (int) ( Math.pow( 101-x, 2 ) / 5 + 50 );
     }
 
     public void switchMode() {
