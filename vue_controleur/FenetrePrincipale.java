@@ -46,7 +46,6 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 int keyCode = e.getKeyCode();
                 switch (keyCode) {
                     case KeyEvent.VK_SPACE: {
-                        //System.out.println("clicked on SPACE");
                         sm.modeManuel();
                         break;
                     }
@@ -100,6 +99,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
 
         // Panneau principal
         JPanel pan = new JPanel(new BorderLayout());
+        SwingStyle.applyPanelStyle(pan);
 
 
         // Panneau central
@@ -119,7 +119,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 }
                 int I = i;
                 int J = j;
-                tab[i][j].addMouseListener(new MouseAdapter() {
+                tab[i][j].addMouseListener(new MouseAdapter() { //TODO: sortir ce code en une fonction à part pour alléger cette méthode
                     private Color background;
 
                     @Override
@@ -137,33 +137,121 @@ public class FenetrePrincipale extends JFrame implements Observer {
                         if  (dessin) {
                             switchCase(I, J);
                         }
-
                     }
-
                 });
 
                 grid.add(tab[i][j]);
             }
         }
 
-
-        // Panneau pour les boutons
-        JPanel pan2 = new JPanel(new FlowLayout());
-        pan2.add(new JButton("b1"));
-        pan2.add(new JTextField("jt1"));
-
         pan.add(grid, BorderLayout.CENTER);
-        pan.add(pan2, BorderLayout.EAST);
 
-        setContentPane(pan);
+        // Barre verticale (VBox) à droite
+        JPanel menuPanel = new JPanel();
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+        menuPanel.setBorder(BorderFactory.createTitledBorder("Menu"));
 
-        // Ajout Menu
+        // Ajout des boutons
+        JButton btn1 = new JButton("Reset");
+        SwingStyle.applyButtonStyle(btn1);
+        btn1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                sm.reset();
+            }
+        });
+
+        JButton btn2 = new JButton("Blank");
+        btn2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                sm.blank();
+            }
+        });
+        SwingStyle.applyButtonStyle(btn2);
+
+        JButton btn3 = new JButton("Draw");
+        btn1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //TODO: faire une option draw
+            }
+        });
+
+        SwingStyle.applyButtonStyle(btn3);
+
+        menuPanel.add(btn1);
+        menuPanel.add(Box.createVerticalStrut(10)); // Espace
+        menuPanel.add(btn2);
+        menuPanel.add(Box.createVerticalStrut(10)); // Espace
+        menuPanel.add(btn3);
+        menuPanel.add(Box.createVerticalStrut(20)); // Espace supplémentaire
+
+        // Slider pour gérer la vitesse
+        JSlider speedSlider = new JSlider(0, 2000, Simulateur.simulationSpeed); //TODO: mettre des constantes
+        speedSlider.setFocusable(false);
+        speedSlider.setMajorTickSpacing(500);
+        speedSlider.setPaintTicks(true);
+        speedSlider.setPaintLabels(true);
+        menuPanel.add(new JLabel("Vitesse:"));
+        menuPanel.add(speedSlider);
+        menuPanel.add(Box.createVerticalStrut(20));
+
+        speedSlider.addChangeListener(e -> {
+            int simulationSpeed = speedSlider.getValue(); // Mettre à jour la vitesse
+            sm.setSleepTime(simulationSpeed);
+            System.out.println("Vitesse de simulation : " + simulationSpeed);
+        });
+
+
+        // Zone d'import avec une liste scrollable
+        JPanel importPanel = new JPanel();
+        SwingStyle.applyPanelStyle(importPanel);
+
+        importPanel.setLayout(new BorderLayout());
+        importPanel.setBorder(BorderFactory.createTitledBorder("Importer"));
+
+        JButton importButton = new JButton("Importer");
+        SwingStyle.applyButtonStyle(importButton);
+
+        JList<String> itemList = new JList<>(new String[]{"Élément 1", "Élément 2", "Élément 3"});
+        itemList.setFocusable(false);
+
+        JScrollPane scrollPane = new JScrollPane(itemList);
+
+        importPanel.add(importButton, BorderLayout.NORTH);
+        importPanel.add(scrollPane, BorderLayout.CENTER);
+
+        menuPanel.add(importPanel);
+
+        // Ajouter le panneau du menu à droite
+        pan.add(menuPanel, BorderLayout.EAST);
+
+        // Barre de menu en haut
         JMenuBar jm = new JMenuBar();
-        JMenu m = new JMenu("Fichier");
-        JMenuItem mi = new JMenuItem("Charger");
-        m.add(mi);
-        jm.add(m);
+        JMenu menu = new JMenu("Fichier");
+
+        // Ajout des éléments "Sauvegarder" et "Charger"
+        JMenuItem saveItem = new JMenuItem("Sauvegarder");
+        JMenuItem loadItem = new JMenuItem("Charger");
+        menu.add(saveItem);
+        menu.add(loadItem);
+
+        saveItem.addActionListener(e -> {
+            System.out.println("Sauvegarde...");
+            grid.requestFocusInWindow(); // Revenir sur la grille
+        });
+
+        loadItem.addActionListener(e -> {
+            System.out.println("Chargement...");
+            grid.requestFocusInWindow(); // Revenir sur la grille
+        });
+
+        jm.add(menu);
         setJMenuBar(jm);
+
+        // Définir le contenu principal
+        setContentPane(pan);
     }
 
 
