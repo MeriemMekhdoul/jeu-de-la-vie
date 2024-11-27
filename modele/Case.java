@@ -1,12 +1,16 @@
 package modele;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Case {
+public class Case
+        implements Serializable {
 
     private boolean state;
     private boolean nextState;
+
+    //private boolean prevState;
     private final Environnement env;
 
     public Case(Environnement _env)
