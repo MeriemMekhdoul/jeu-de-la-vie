@@ -3,7 +3,7 @@ package modele;
 import java.io.*;
 
 public class Simulateur {
-    public static int simulationSpeed = 270; // Valeur par défaut
+    public static int simulationSpeed = 550; // Valeur par défaut
     private Environnement env;
     private Ordonnanceur ord;
 

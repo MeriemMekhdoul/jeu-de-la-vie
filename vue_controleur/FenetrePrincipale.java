@@ -2,6 +2,7 @@ package vue_controleur;
 
 
 import modele.Environnement;
+import modele.Position;
 import modele.Simulateur;
 import modele.MyColor;
 
@@ -25,6 +26,7 @@ import javax.swing.border.Border;
 
 public class FenetrePrincipale extends JFrame implements Observer {
     boolean dessin =false;
+    boolean select =false;
     private JPanel[][] tab;
     private Simulateur sm;
     Environnement env;
@@ -91,6 +93,14 @@ public class FenetrePrincipale extends JFrame implements Observer {
         }
     }
 
+    public Position selectCase(int I, int J) {
+
+        tab[I][J].setBackground(MyColor.BLUE);
+        Position p =new Position(I, J);
+        System.out.println(p);
+        return p;
+    }
+
 
 
     public void build() {
@@ -123,8 +133,16 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 tab[i][j].addMouseListener(new MouseAdapter() { //TODO: sortir ce code en une fonction à part pour alléger cette méthode
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        dessin=true;
-                        switchCase(I, J);
+                        if (!select) {
+                            dessin = true;
+                            switchCase(I, J);
+                        }else {
+                            Position p1;
+                            Position p2;
+                            p1 = selectCase(I, J);
+                            p2 = selectCase(I, J);// -------------------------Tout Faux, deux print au lieu d'un (logique)
+                        }
+
                     }
                     @Override
                     public void mouseReleased(MouseEvent e) {
@@ -133,7 +151,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
 
                     @Override
                     public void mouseEntered (MouseEvent e){
-                        if  (dessin) {
+                        if  (dessin && !select) {
                             switchCase(I, J);
                         }
                     }
@@ -151,32 +169,32 @@ public class FenetrePrincipale extends JFrame implements Observer {
         menuPanel.setBorder(BorderFactory.createTitledBorder("Menu"));
 
         // Ajout des boutons
-        JButton btn1 = new JButton("Reset");
-        SwingStyle.applyButtonStyle(btn1);
-        btn1.addMouseListener(new MouseAdapter() {
+        JButton resetButton = new JButton("Reset");
+        SwingStyle.applyButtonStyle(resetButton);
+        resetButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 sm.reset();
             }
         });
 
-        JButton btn2 = new JButton("Blank");
-        btn2.addMouseListener(new MouseAdapter() {
+        JButton BlankButton = new JButton("Blank");
+        BlankButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 sm.blank();
             }
         });
-        SwingStyle.applyButtonStyle(btn2);
+        SwingStyle.applyButtonStyle(BlankButton);
 
-        JButton btn3 = new JButton("sauv");
+        JButton btn3 = new JButton("SauveZone");
         setSauvegardeButton(btn3);
 
         SwingStyle.applyButtonStyle(btn3);
 
-        menuPanel.add(btn1);
+        menuPanel.add(resetButton);
         menuPanel.add(Box.createVerticalStrut(10)); // Espace
-        menuPanel.add(btn2);
+        menuPanel.add(BlankButton);
         menuPanel.add(Box.createVerticalStrut(10)); // Espace
         menuPanel.add(btn3);
         menuPanel.add(Box.createVerticalStrut(20)); // Espace supplémentaire
@@ -235,6 +253,8 @@ public class FenetrePrincipale extends JFrame implements Observer {
 
         saveItem.addActionListener(e -> {
             System.out.println("Sauvegarde...");
+            select=!select;
+            System.out.println("ici");
             grid.requestFocusInWindow(); // Revenir sur la grille
         });
 
@@ -255,6 +275,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
+                    select=!select;
                     sm.sauvegarderEcran();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
