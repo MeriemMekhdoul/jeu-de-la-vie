@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Case
-        implements Serializable {
+public class Case implements Serializable {
 
     private boolean state;
     private boolean nextState;

@@ -25,10 +25,27 @@ public class Position implements Serializable {
     }
 
     public void sauve(String s) throws IOException {
+        System.out.println("homepath :" + System.getProperty("user.home"));
+        // Chemin du répertoire
+        File directory = new File(System.getProperty("user.home") + "\\JeuDeLaVie");
 
-        File pos= new File("W:\\3eme Annee Automne\\LIFAPOO\\lifapoo-jeu-de-la-vie-g06\\data\\" + s);
-        pos.createNewFile();
-        System.out.println("pendant: " + pos);
+        // Vérifie si le répertoire existe, sinon le crée
+        if (!directory.exists()) {
+            if (directory.mkdirs()) {
+                System.out.println("Répertoire créé : " + directory.getAbsolutePath());
+            } else {
+                throw new IOException("Impossible de créer le répertoire : " + directory.getAbsolutePath());
+            }
+        }
+
+        // Création du fichier
+        File pos = new File(directory, s);
+        if (pos.createNewFile()) {
+            System.out.println("Fichier créé : " + pos.getAbsolutePath());
+        } else {
+            System.out.println("Le fichier existe déjà : " + pos.getAbsolutePath());
+        }
+
         System.out.println(pos.canWrite());
         if (pos.canWrite()){
             try {
@@ -46,7 +63,7 @@ public class Position implements Serializable {
 
     public void charge(String s) throws IOException {
 
-        File pos= new File("W:\\3eme Annee Automne\\LIFAPOO\\lifapoo-jeu-de-la-vie-g06\\data\\" + s);
+        File pos= new File(System.getProperty("user.home")+"\\JeuDeLaVie\\"+s);
 
         System.out.println("pendant: " + pos);
         System.out.println(pos.canRead());
