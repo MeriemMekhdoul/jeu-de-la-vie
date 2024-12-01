@@ -5,11 +5,9 @@ import modele.Environnement;
 import modele.Simulateur;
 import modele.MyColor;
 
+import java.awt.*;
+import java.io.IOException;
 import java.math.*;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -123,8 +121,6 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 int I = i;
                 int J = j;
                 tab[i][j].addMouseListener(new MouseAdapter() { //TODO: sortir ce code en une fonction à part pour alléger cette méthode
-                    private Color background;
-
                     @Override
                     public void mousePressed(MouseEvent e) {
                         dessin=true;
@@ -173,13 +169,8 @@ public class FenetrePrincipale extends JFrame implements Observer {
         });
         SwingStyle.applyButtonStyle(btn2);
 
-        JButton btn3 = new JButton("Draw");
-        btn1.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                //TODO: faire une option draw
-            }
-        });
+        JButton btn3 = new JButton("sauv");
+        setSauvegardeButton(btn3);
 
         SwingStyle.applyButtonStyle(btn3);
 
@@ -216,6 +207,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
         importPanel.setBorder(BorderFactory.createTitledBorder("Importer"));
 
         JButton importButton = new JButton("Importer");
+        setImportButton(importButton);
         SwingStyle.applyButtonStyle(importButton);
 
         JList<String> itemList = new JList<>(new String[]{"Élément 1", "Élément 2", "Élément 3"});
@@ -258,6 +250,30 @@ public class FenetrePrincipale extends JFrame implements Observer {
         setContentPane(pan);
     }
 
+    private void setSauvegardeButton(JButton button){
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    sm.sauvegarderEcran();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+    private void setImportButton(JButton button){
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    sm.chargerEcran();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
 
     @Override
     public void update(Observable o, Object arg) {

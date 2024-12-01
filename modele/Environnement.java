@@ -1,14 +1,15 @@
 package modele;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 
-public class Environnement extends Observable implements Runnable {
-    private final Case[][] tab;
-    private final Map<Case, Position> mapDonnees;
-    private final int sizeX;
-    private final int sizeY;
+public class Environnement extends Observable implements Runnable, Serializable {
+    private Case[][] tab;
+    private Map<Case, Position> mapDonnees;
+    private int sizeX;
+    private int sizeY;
 
     public Environnement(int _sizeX, int _sizeY) {
 
@@ -25,14 +26,6 @@ public class Environnement extends Observable implements Runnable {
                 mapDonnees.put(c, new Position(i, j));
             }
         }
-        //System.out.println("print hashmap");
-        // Pour afficher le contenu de la HashMap
-        for (Map.Entry<Case, Position> entry : mapDonnees.entrySet()) {
-            Case key = entry.getKey();
-            Position value = entry.getValue();
-            //System.out.println("Position: " + value + "     etat = " + key.getState());
-        }
-
     }
 
     public int getSizeX() {
@@ -60,7 +53,6 @@ public class Environnement extends Observable implements Runnable {
     public void nextState() {
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
-                //System.out.println();
                 tab[i][j].nextState();
             }
         }
@@ -69,7 +61,6 @@ public class Environnement extends Observable implements Runnable {
     public void updateState() {
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
-                //System.out.println();
                 tab[i][j].updateState();
             }
         }
@@ -142,14 +133,54 @@ public class Environnement extends Observable implements Runnable {
         return null; // Retourner null si hors limites
     }
 
-
     @Override
     public void run() {
-        //rndState();
         nextState();
         updateState();
         // notification de l'observer
         setChanged();
         notifyObservers();
     }
+
+    public void setAll(Environnement e) {
+        // Vérification de la taille avant de copier les données
+        if (this.sizeX == e.getSizeX() && this.sizeY == e.getSizeY()) {
+
+            // Changer l'état des cases de l'environnement
+            for (int i = 0; i < sizeX; i++) {
+                for (int j = 0; j < sizeY; j++) {
+                    this.tab[i][j].setState(e.getState(i,j));
+                }
+            }
+
+            // notification de l'observer
+            setChanged();
+            notifyObservers();
+        } else {
+            // Si les tailles ne correspondent pas, créer un nouvel environnement avec la taille de l'environnement source
+            System.out.println("Les tailles des environnements ne correspondent pas, création d'un nouvel environnement.");
+
+            // Créer un nouvel environnement avec les dimensions de l'environnement source
+            this.sizeX = e.getSizeX();
+            this.sizeY = e.getSizeY();
+            this.tab = new Case[this.sizeX][this.sizeY];
+            this.mapDonnees = new HashMap<>();
+
+            // Initialiser les cases dans le nouvel environnement avec les données de l'environnement source
+            for (int i = 0; i < this.sizeX; i++) {
+                for (int j = 0; j < this.sizeY; j++) {
+                    Case c = new Case(this);  // Créez de nouvelles cases selon votre logique (par exemple, vide, ou avec un état initial)
+                    this.tab[i][j] = c;
+                    c.setState(e.getState(i, j));  // Copier l'état de la case
+                    mapDonnees.put(c, new Position(i, j));
+                }
+            }
+
+            // Notifier l'observateur que le nouvel environnement a été créé
+            setChanged();
+            notifyObservers();
+        }
+    }
+
+
 }

@@ -13,12 +13,6 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-		System.out.println("avant");
-		Position p = new Position(6, 3);
-		p.sauve("pos1.txt");
-		System.out.println("apres");
-		p.charge("pos1.txt");
-		System.out.println("apres");
         SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
 
