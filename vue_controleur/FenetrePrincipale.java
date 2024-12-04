@@ -27,6 +27,9 @@ import javax.swing.border.Border;
 public class FenetrePrincipale extends JFrame implements Observer {
     boolean dessin =false;
     boolean select =false;
+    static Position P0 = new Position(0,0);
+    Position p1 = new Position(0,0);
+    Position p2 = new Position(0,0);;
     private JPanel[][] tab;
     private Simulateur sm;
     Environnement env;
@@ -94,10 +97,13 @@ public class FenetrePrincipale extends JFrame implements Observer {
     }
 
     public Position selectCase(int I, int J) {
-
-        tab[I][J].setBackground(MyColor.BLUE);
-        Position p =new Position(I, J);
-        System.out.println(p);
+        Position p = new Position(I, J);
+        if (p1 != p)
+        if (env.getState(I, J)) {
+            tab[I][J].setBackground(MyColor.BLUE);
+        } else {
+            tab[I][J].setBackground(MyColor.CYAN);
+        }
         return p;
     }
 
@@ -136,11 +142,12 @@ public class FenetrePrincipale extends JFrame implements Observer {
                         if (!select) {
                             dessin = true;
                             switchCase(I, J);
-                        }else {
-                            Position p1;
-                            Position p2;
+                        }else if (SwingUtilities.isLeftMouseButton(e) ) {
                             p1 = selectCase(I, J);
-                            p2 = selectCase(I, J);// -------------------------Tout Faux, deux print au lieu d'un (logique)
+                            System.out.println("p1 "+ p1);
+                        }else if(SwingUtilities.isRightMouseButton(e) ) {
+                            p2 = selectCase(I, J);
+                            System.out.println("p2 "+ p2);
                         }
 
                     }
@@ -187,7 +194,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
         });
         SwingStyle.applyButtonStyle(BlankButton);
 
-        JButton btn3 = new JButton("SauveZone");
+        JButton btn3 = new JButton("Sauvegarde \r Zone");
         setSauvegardeButton(btn3);
 
         SwingStyle.applyButtonStyle(btn3);
@@ -274,12 +281,19 @@ public class FenetrePrincipale extends JFrame implements Observer {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (!select){
+                select=true;
+                }else if (!p1.equals(P0) && !p2.equals(P0)){
+                    System.out.println("La sauvegarde prends :" + p1+"\n"+p2);
+                    select=false;
+                }
+                /*
                 try {
-                    select=!select;
+                    select = !select;
                     sm.sauvegarderEcran();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
-                }
+                }*/
             }
         });
     }

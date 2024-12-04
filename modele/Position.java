@@ -20,6 +20,13 @@ public class Position implements Serializable {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Position)
+            return x==((Position) obj).getX() && y==((Position) obj).getY();
+        return false;
+    }
+
+    @Override
     public String toString(){
         return "x = " + x + " y = " + y;
     }
