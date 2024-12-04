@@ -11,6 +11,7 @@ public class Environnement extends Observable implements Runnable, Serializable 
     private int sizeX;
     private int sizeY;
 
+    public Environnement() {}
     public Environnement(int _sizeX, int _sizeY) {
 
         sizeX = _sizeX;
@@ -182,5 +183,57 @@ public class Environnement extends Observable implements Runnable, Serializable 
         }
     }
 
+    public Environnement getSousEnv(Position p1, Position p2) {
+        int dx = Math.abs(p1.getX() - p2.getX()) + 1;
+        int dy = Math.abs(p1.getY() - p2.getY()) + 1;
 
+        Environnement sEnv = new Environnement();
+        sEnv.setSizeX(dx);
+        sEnv.setSizeY(dy);
+
+        Case[][] tab = new Case[dx][dy];
+        System.out.println("dx = " + dx + " dy = " + dy );
+        sEnv.setTab(tab);
+
+        // Déterminer le point de départ (xmin, ymin)
+        int xmin = Math.min(p1.getX(), p2.getX());
+        int ymin = Math.min(p1.getY(), p2.getY());
+
+        for (int i = 0; i < dx; i++) {
+            for (int j = 0; j < dy; j++) {
+                Case c = this.tab[xmin + i][ymin + j];
+                sEnv.tab[i][j] = c; //copier la case
+            }
+        }
+
+        return sEnv;
+    }
+
+    public void setSousEnv(Environnement _env, Position p) {
+        int x = _env.getSizeX();
+        int y = _env.getSizeY();
+
+        //get le point de depart du parcours du tableau de valeur
+        int xDebut = p.getX();
+        int yDebut = p.getY();
+
+        for (int i = xDebut; i < xDebut + x; i++) {
+            for (int j = yDebut; j < yDebut + y; j++) {
+                tab[i][j] = _env.tab[i - xDebut][j - yDebut];
+            }
+        }
+    }
+
+
+    public void setSizeX(int sizeX) {
+        this.sizeX = sizeX;
+    }
+
+    public void setSizeY(int sizeY) {
+        this.sizeY = sizeY;
+    }
+
+    public void setTab(Case[][] _tab){
+        this.tab = _tab;
+    }
 }
