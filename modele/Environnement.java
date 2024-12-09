@@ -219,9 +219,13 @@ public class Environnement extends Observable implements Runnable, Serializable 
 
         for (int i = xDebut; i < xDebut + x; i++) {
             for (int j = yDebut; j < yDebut + y; j++) {
-                tab[i][j] = _env.tab[i - xDebut][j - yDebut];
+                tab[i][j].setState(_env.tab[i - xDebut][j - yDebut].getState());
             }
         }
+
+        // notification de l'observer
+        setChanged();
+        notifyObservers();
     }
 
 
