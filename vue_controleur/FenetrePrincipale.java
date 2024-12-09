@@ -8,16 +8,12 @@ import modele.MyColor;
 
 import java.awt.*;
 import java.io.IOException;
-import java.math.*;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
@@ -31,8 +27,10 @@ public class FenetrePrincipale extends JFrame implements Observer {
     Position p1 = new Position(0,0);
     Position p2 = new Position(0,0);;
     private JPanel[][] tab;
-    private Simulateur sm;
+    private final Simulateur sm;
     Environnement env;
+    Environnement sEnv;
+
     public FenetrePrincipale(Environnement _env, Simulateur _sm) {
         super();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -98,7 +96,6 @@ public class FenetrePrincipale extends JFrame implements Observer {
 
     public Position selectCase(int I, int J) {
         Position p = new Position(I, J);
-        if (p1 != p)
         if (env.getState(I, J)) {
             tab[I][J].setBackground(MyColor.BLUE);
         } else {
@@ -287,14 +284,12 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 }else if (!p1.equals(P0) && !p2.equals(P0)){
                     System.out.println("La sauvegarde prends :" + p1+"\n"+p2);
                     select=false;
+                    try {
+                        sm.sauvegarderEcran(p1,p2);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
-                /*
-                try {
-                    select = !select;
-                    sm.sauvegarderEcran();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }*/
             }
         });
     }
@@ -302,10 +297,16 @@ public class FenetrePrincipale extends JFrame implements Observer {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                try {
-                    sm.chargerEcran();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                if (!select){
+                    select = true;
+                    try {
+                        sEnv = sm.chargerEcran();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else if (!p1.equals(P0)){
+                    select = false;
+                    sm.setSousEnv(sEnv, p1);
                 }
             }
         });

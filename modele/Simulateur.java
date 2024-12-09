@@ -53,7 +53,7 @@ public class Simulateur {
         ord.setSleepTime(sleepTime);
     }
 
-    public void sauvegarderEcran() throws IOException {
+    public void sauvegarderEcran(Position p1, Position p2) throws IOException {
         //sauvegarder l'etat actuel de la grille
         // Chemin du répertoire
         File directory = new File(System.getProperty("user.home") + "\\JeuDeLaVie");//TODO: maybe changer le chemin ?
@@ -78,7 +78,8 @@ public class Simulateur {
         if (file.canWrite()){
             try {
                 ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(file));
-                o.writeObject(env);
+                Environnement sEnv = env.getSousEnv(p1,p2);
+                o.writeObject(sEnv);
                 o.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -86,8 +87,9 @@ public class Simulateur {
         }
     }
 
-    public void chargerEcran() throws IOException {
+    public Environnement chargerEcran() throws IOException {
         File file= new File(System.getProperty("user.home") + "\\JeuDeLaVie\\screenSauvegarde.bin");//TODO: mettre en constante
+        Environnement en = null;
 
         if(file.exists()) {
             if (file.canRead()) {
@@ -95,7 +97,15 @@ public class Simulateur {
                     ObjectInputStream o = new ObjectInputStream(new FileInputStream(file));
                     Object e = o.readObject();
                     if (e instanceof Environnement) {
-                        env.setAll((Environnement) e);
+                        en = (Environnement) e;
+                        // Affichage du sous-environnement
+                        System.out.println("Sous-environnement extrait:");
+                        for (int i = 0; i < en.getSizeX(); i++) {
+                            for (int j = 0; j < en.getSizeY(); j++) {
+                                System.out.print(en.getCase(i, j).getState() ? "1 " : "0 ");
+                            }
+                            System.out.println();
+                        }
                     }
                     o.close();
                 } catch (ClassNotFoundException | IOException e) {
@@ -104,5 +114,10 @@ public class Simulateur {
             }
         } else throw new IOException("Le fichier n'existe pas : " + file.getAbsolutePath());
 
+        return en;
+    }
+
+    public void setSousEnv(Environnement sEnv, Position p){
+        env.setSousEnv(sEnv, p);
     }
 }
