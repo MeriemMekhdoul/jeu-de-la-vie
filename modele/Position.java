@@ -3,8 +3,8 @@ package modele;
 import java.io.*;
 
 public class Position implements Serializable {
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
 
     public Position(int _x, int _y){
         x = _x;
@@ -25,7 +25,10 @@ public class Position implements Serializable {
             return x==((Position) obj).getX() && y==((Position) obj).getY();
         return false;
     }
-
+    public void setPos(int _x, int _y){
+        x = _x;
+        y = _y;
+    }
     @Override
     public String toString(){
         return "x = " + x + " y = " + y;
