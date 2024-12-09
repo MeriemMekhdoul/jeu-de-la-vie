@@ -134,35 +134,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 } else {
                     tab[i][j].setBackground(MyColor.LIGHT_BLUE);
                 }
-                int I = i;
-                int J = j;
-                tab[i][j].addMouseListener(new MouseAdapter() { //TODO: sortir ce code en une fonction à part pour alléger cette méthode
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        if (!select) {
-                            dessin = true;
-                            switchCase(I, J);
-                        }else if (SwingUtilities.isLeftMouseButton(e) ) {
-                            p1 = selectCase(I, J);
-                            System.out.println("p1 "+ p1);
-                        }else if(SwingUtilities.isRightMouseButton(e) ) {
-                            p2 = selectCase(I, J);
-                            System.out.println("p2 "+ p2);
-                        }
-
-                    }
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        dessin=false;
-                    }
-
-                    @Override
-                    public void mouseEntered (MouseEvent e){
-                        if  (dessin && !select) {
-                            switchCase(I, J);
-                        }
-                    }
-                });
+                addMouseListener(tab[i][j],i,j);
 
                 grid.add(tab[i][j]);
             }
@@ -277,6 +249,35 @@ public class FenetrePrincipale extends JFrame implements Observer {
         setContentPane(pan);
     }
 
+    private void addMouseListener(JPanel cell, int I, int J){
+        cell.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (!select) {
+                    dessin = true;
+                    switchCase(I, J);
+                }else if (SwingUtilities.isLeftMouseButton(e) ) {
+                    p1 = selectCase(I, J);
+                    System.out.println("p1 "+ p1);
+                }else if(SwingUtilities.isRightMouseButton(e) ) {
+                    p2 = selectCase(I, J);
+                    System.out.println("p2 "+ p2);
+                }
+
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                dessin=false;
+            }
+
+            @Override
+            public void mouseEntered (MouseEvent e){
+                if  (dessin && !select) {
+                    switchCase(I, J);
+                }
+            }
+        });
+    }
     private void setSauvegardeButton(JButton button){
         button.addMouseListener(new MouseAdapter() {
             @Override
