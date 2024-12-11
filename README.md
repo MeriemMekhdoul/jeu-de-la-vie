@@ -1,12 +1,12 @@
 # LIFAPOO Jeu de la Vie G06
 
+## Etudiants
+MEKHDOUL Meriem p2310195
+RODRIGUEZ Adam p2109294
 
+## Jeu de la vie
+Une simple application qui simule le jeu de la vie de Conway dans le cadre de l'ue LIFAPOO
 
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
 ## Add your files
 
