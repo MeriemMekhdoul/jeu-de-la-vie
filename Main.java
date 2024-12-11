@@ -15,12 +15,13 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
 
-				Environnement e = new Environnement(10,10);
+				Environnement e = new Environnement(4,4);
 				Ordonnanceur o = new Ordonnanceur(Simulateur.simulationSpeed, e);
 
 				Simulateur s = new Simulateur(e,o);
 
 				FenetrePrincipale fenetre = new FenetrePrincipale(e,s);
+				s.setFenetre(fenetre);
 				fenetre.setVisible(true);
 				e.addObserver(fenetre);
 

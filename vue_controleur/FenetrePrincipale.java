@@ -55,28 +55,23 @@ public class FenetrePrincipale extends JFrame implements Observer {
                         break;
                     }
                     case KeyEvent.VK_X: {
-                        System.out.println("clicked on X");
                         sm.switchMode();
                         break;
                     }
                     case KeyEvent.VK_S: {
-                        System.out.println("clicked on S");
                         sm.stop();
                         break;
                     }
                     case KeyEvent.VK_R: {
-                        System.out.println("clicked on R");
                         sm.reset();
                         break;
                     }
                     case KeyEvent.VK_B: {
-                        System.out.println("clicked on R");
                         sm.blank();
                         break;
                     }
                     case KeyEvent.VK_Z: {
                         if (e.isControlDown()) {
-                            System.out.println("clicked on ctrl+Z");
                             sm.previous();
                         }
                         break;
@@ -104,7 +99,6 @@ public class FenetrePrincipale extends JFrame implements Observer {
             tab[I][J].setBackground(MyColor.LIGHT_BLUE);
         }
     }
-
     public Position selectCase(int I, int J, int s) {
         Position p = new Position(I, J);
         if (!p1.equals(P0) && s==1) {
@@ -129,10 +123,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
         return p;
     }
 
-
-
     public void build() {
-
         setTitle("Jeu de la Vie");
         setSize(600, 500);
 
@@ -142,25 +133,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
 
 
         // Panneau central
-        JComponent grid = new JPanel (new GridLayout(env.getSizeX(),env.getSizeY()));
-        tab = new JPanel[env.getSizeX()][env.getSizeY()];
-
-
-        Border blackline = BorderFactory.createLineBorder(Color.black,1);
-        grid.setBorder(blackline);
-        for(int i = 0; i<env.getSizeX();i++){
-            for (int j = 0; j < env.getSizeY(); j++) {
-                tab[i][j] = new JPanel();
-                if (env.getState(i, j)) {
-                    tab[i][j].setBackground(MyColor.DARK_BLUE);
-                } else {
-                    tab[i][j].setBackground(MyColor.LIGHT_BLUE);
-                }
-                addMouseListener(tab[i][j],i,j);
-
-                grid.add(tab[i][j]);
-            }
-        }
+        JComponent grid = setGrid();
 
         pan.add(grid, BorderLayout.CENTER);
 
@@ -200,23 +173,11 @@ public class FenetrePrincipale extends JFrame implements Observer {
         menuPanel.add(sauvegardeButton);
         menuPanel.add(Box.createVerticalStrut(20)); // Espace supplémentaire
 
-        // Slider pour gérer la vitesse
-        JSlider speedSlider = new JSlider(0, 100, 50); //TODO: mettre des constantes
-        speedSlider.setFocusable(false);
-        speedSlider.setMajorTickSpacing(25);
-        speedSlider.setPaintTicks(true);
-        speedSlider.setPaintLabels(true);
+        JSlider speedSlider = setupSlider();
+
         menuPanel.add(new JLabel("Vitesse:"));
         menuPanel.add(speedSlider);
         menuPanel.add(Box.createVerticalStrut(20));
-
-        speedSlider.addChangeListener(e -> {
-            float simulationSpeed = speedSlider.getValue(); // Mettre à jour la vitesse
-
-            sm.setSleepTime(sm.speedCurve(simulationSpeed));
-            System.out.println("Vitesse de simulation : " + sm.speedCurve(simulationSpeed));
-        });
-
 
         // Zone d'import avec une liste scrollable
         JPanel importPanel = new JPanel();
@@ -229,45 +190,13 @@ public class FenetrePrincipale extends JFrame implements Observer {
         setImportButton(importButton);
         SwingStyle.applyButtonStyle(importButton);
 
-        environnements = sm.chargerEnvironnements();
-
-        // Création de la JList avec le modèle
-        for (Environnement env : environnements) {
-            envListModel.addElement(env);
-        }
-
-        // Création de la JList avec le modèle
-        envList = new JList<>(envListModel);
-
-        // Définir le renderer personnalisé pour afficher chaque environnement sous forme de grille
-        envList.setCellRenderer(new EnvListRenderer());
-
-        // Configurer la JList pour une colonne unique
-        envList.setVisibleRowCount(-1); // Affiche tous les éléments
-        envList.setFixedCellHeight(150); // Taille fixe pour chaque environnement
-        envList.setFixedCellWidth(150);  // Taille uniforme
-        envList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Optionnel : sélection unique
-
+        setupListeMotifs();
         // Ajouter la JList dans un JScrollPane
         JScrollPane scrollPane = new JScrollPane(envList);
 
         // Ajouter la JList et le bouton d'importation au panneau d'importation
         importPanel.add(importButton, BorderLayout.NORTH);
         importPanel.add(scrollPane, BorderLayout.CENTER);
-        
-        // Ajouter un écouteur pour gérer les clics sur les éléments de la liste
-        envList.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                select = !select;
-                int index = envList.locationToIndex(e.getPoint());
-                if (index >= 0) {
-                    sEnv = envListModel.get(index);
-                }
-                requestFocusOnWindow();
-            }
-        });
-/** ******************************************* */
 
         menuPanel.add(importPanel);
 
@@ -311,6 +240,83 @@ public class FenetrePrincipale extends JFrame implements Observer {
         setContentPane(pan);
     }
 
+    public JComponent setGrid(){
+        // Panneau central
+        JComponent grid = new JPanel (new GridLayout(env.getSizeX(),env.getSizeY()));
+        tab = new JPanel[env.getSizeX()][env.getSizeY()];
+
+
+        Border blackline = BorderFactory.createLineBorder(Color.black,1);
+        grid.setBorder(blackline);
+        for(int i = 0; i<env.getSizeX();i++){
+            for (int j = 0; j < env.getSizeY(); j++) {
+                tab[i][j] = new JPanel();
+                if (env.getState(i, j)) {
+                    tab[i][j].setBackground(MyColor.DARK_BLUE);
+                } else {
+                    tab[i][j].setBackground(MyColor.LIGHT_BLUE);
+                }
+                addMouseListener(tab[i][j],i,j);
+
+                grid.add(tab[i][j]);
+            }
+        }
+        return grid;
+    }
+
+    private JSlider setupSlider(){
+
+        // Slider pour gérer la vitesse
+        JSlider speedSlider = new JSlider(0, 100, 50); //TODO: mettre des constantes
+        speedSlider.setFocusable(false);
+        speedSlider.setMajorTickSpacing(25);
+        speedSlider.setPaintTicks(true);
+        speedSlider.setPaintLabels(true);
+
+        speedSlider.addChangeListener(e -> {
+            float simulationSpeed = speedSlider.getValue(); // Mettre à jour la vitesse
+
+            sm.setSleepTime(sm.speedCurve(simulationSpeed));
+            System.out.println("Vitesse de simulation : " + sm.speedCurve(simulationSpeed));
+        });
+
+        return speedSlider;
+    }
+
+    private void setupListeMotifs(){
+        environnements = sm.chargerEnvironnements();
+
+        // Création de la JList avec le modèle
+        for (Environnement env : environnements) {
+            envListModel.addElement(env);
+        }
+
+        // Création de la JList avec le modèle
+        envList = new JList<>(envListModel);
+
+        // Définir le renderer personnalisé pour afficher chaque environnement sous forme de grille
+        envList.setCellRenderer(new EnvListRenderer());
+
+        // Configurer la JList pour une colonne unique
+        envList.setVisibleRowCount(-1); // Affiche tous les éléments
+        envList.setFixedCellHeight(150); // Taille fixe pour chaque environnement
+        envList.setFixedCellWidth(150);  // Taille uniforme
+        envList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Optionnel : sélection unique
+
+        // Ajouter un écouteur pour gérer les clics sur les éléments de la liste
+        envList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                select = !select;
+                int index = envList.locationToIndex(e.getPoint());
+                if (index >= 0) {
+                    sEnv = envListModel.get(index);
+                }
+                requestFocusOnWindow();
+            }
+        });
+    }
+
     private void addMouseListener(JPanel cell, int I, int J){
         cell.addMouseListener(new MouseAdapter() {
             @Override
@@ -347,7 +353,6 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 if (!select){
                 select=true;
                 }else if (!p1.equals(P0) && !p2.equals(P0)){
-                    System.out.println("La sauvegarde prends :" + p1+"\n"+p2);
                     select=false;
                     try {
                         Environnement en = sm.sauvegarderEcran(p1,p2, "\\data");
@@ -373,12 +378,6 @@ public class FenetrePrincipale extends JFrame implements Observer {
         envListModel = (DefaultListModel<Environnement>) envList.getModel();
 
         envListModel.addElement(env);
-
-        // Création de la JList avec le modèle
-        //envList = new JList<>(envListModel);
-
-        // Définir le renderer personnalisé pour afficher chaque environnement sous forme de grille
-        //envList.setCellRenderer(new EnvListRenderer());
     }
 
     private void setImportButton(JButton button){

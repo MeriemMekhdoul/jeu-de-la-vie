@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 
+/**
+ * Classe représentant l'environnement de simulation du Jeu de la Vie.
+ * Gère la grille de cellules ainsi que les règles et la transition des états.
+ */
 public class Environnement extends Observable implements Runnable, Serializable {
     private Case[][] tab;
     private Map<Case, Position> mapDonnees;
@@ -37,6 +41,9 @@ public class Environnement extends Observable implements Runnable, Serializable 
         return sizeY;
     }
 
+    /**
+     * Définit un état aléatoire pour toutes les cellules de la grille.
+     */
     public void rndState() {
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
@@ -44,6 +51,9 @@ public class Environnement extends Observable implements Runnable, Serializable 
             }
         }
     }
+    /**
+     * Réinitialise toutes les cellules à l'état vide.
+     */
     public void blankState() {
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
@@ -51,7 +61,9 @@ public class Environnement extends Observable implements Runnable, Serializable 
             }
         }
     }
-
+    /**
+     * Réinitialise l'état courant des cellules à leur état précédent.
+     */
     public void prevState(){
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
@@ -62,6 +74,9 @@ public class Environnement extends Observable implements Runnable, Serializable 
         notifyObservers();
     }
 
+    /**
+     * Calcule le prochain état des cellules et le sauvegarde.
+     */
     public void nextState() {
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
@@ -70,7 +85,9 @@ public class Environnement extends Observable implements Runnable, Serializable 
             }
         }
     }
-
+    /**
+     * Met à jour l'état des cellules en fonction de leurs voisins.
+     */
     public void updateState() {
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
@@ -83,13 +100,33 @@ public class Environnement extends Observable implements Runnable, Serializable 
     public Position getPos(Case cell){
         return mapDonnees.get(cell);
     }
+    /**
+     * Retourne l'état d'une cellule en fonction de ses coordonnées.
+     *
+     * @param x abscisse.
+     * @param y ordonnée.
+     * @return état de la cellule.
+     */
     public boolean getState(int x, int y) {
         return tab[x][y].getState();
     }
+    /**
+     * Retourne une cellule en fonction de ses coordonnées.
+     *
+     * @param x abscisse.
+     * @param y ordonnée.
+     * @return cellule correspondante.
+     */
+
     public Case getCase(int x, int y) {
         return tab[x][y];
     }
-
+    /**
+     * Compte le nombre de cellules voisines vivantes d'une cellule donnée.
+     *
+     * @param source la cellule cible.
+     * @return nombre de cellules voisines vivantes.
+     */
     public int getNbCases(Case source) {
         int somme = 0;
         for (Direction d : Direction.values()) {
@@ -146,7 +183,9 @@ public class Environnement extends Observable implements Runnable, Serializable 
 
         return null; // Retourner null si hors limites
     }
-
+    /**
+     * Thread exécutant la transition des états dans l'environnement.
+     */
     @Override
     public void run() {
         nextState();
@@ -158,7 +197,12 @@ public class Environnement extends Observable implements Runnable, Serializable 
 
 
 
-
+    /**
+     * Met à jour toutes les cellules de l'environnement avec celles d'un autre environnement.
+     * (dans le cas ou on veut importer un nouvel écran)
+     *
+     * @param e l'environnement source.
+     */
     public void setAll(Environnement e) {
         // Vérification de la taille avant de copier les données
         if (this.sizeX == e.getSizeX() && this.sizeY == e.getSizeY()) {
@@ -169,10 +213,6 @@ public class Environnement extends Observable implements Runnable, Serializable 
                     this.tab[i][j].setState(e.getState(i,j));
                 }
             }
-
-            // notification de l'observer
-            setChanged();
-            notifyObservers();
         } else {
             // Si les tailles ne correspondent pas, créer un nouvel environnement avec la taille de l'environnement source
             System.out.println("Les tailles des environnements ne correspondent pas, création d'un nouvel environnement.");
@@ -186,19 +226,29 @@ public class Environnement extends Observable implements Runnable, Serializable 
             // Initialiser les cases dans le nouvel environnement avec les données de l'environnement source
             for (int i = 0; i < this.sizeX; i++) {
                 for (int j = 0; j < this.sizeY; j++) {
-                    Case c = new Case(this);  // Créez de nouvelles cases selon votre logique (par exemple, vide, ou avec un état initial)
+                    Case c = new Case(this);
                     this.tab[i][j] = c;
                     c.setState(e.getState(i, j));  // Copier l'état de la case
                     mapDonnees.put(c, new Position(i, j));
                 }
             }
-
-            // Notifier l'observateur que le nouvel environnement a été créé
-            setChanged();
-            notifyObservers();
         }
+
     }
 
+    public void updateVue(){
+        // notification de l'observer
+        setChanged();
+        notifyObservers();
+    }
+
+    /**
+     * Extrait un sous-environnement défini par deux positions diagonales dans l'environnement actuel.
+     *
+     * @param p1 première position (coin).
+     * @param p2 seconde position (coin opposé).
+     * @return un nouvel environnement représentant le sous-environnement.
+     */
     public Environnement getSousEnv(Position p1, Position p2) {
         int dx = Math.abs(p1.getX() - p2.getX()) + 1;
         int dy = Math.abs(p1.getY() - p2.getY()) + 1;
@@ -225,6 +275,13 @@ public class Environnement extends Observable implements Runnable, Serializable 
         return sEnv;
     }
 
+
+    /**
+     * Intègre un sous-environnement dans l'environnement principal à une position donnée.
+     *
+     * @param _env sous-environnement à insérer.
+     * @param p position de départ dans l'environnement principal.
+     */
     public void setSousEnv(Environnement _env, Position p) {
         int x = _env.getSizeX();
         int y = _env.getSizeY();

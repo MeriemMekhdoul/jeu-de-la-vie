@@ -15,11 +15,16 @@ public class Simulateur {
     public static int simulationSpeed = 550; // Valeur par défaut
     private Environnement env;
     private Ordonnanceur ord;
-    public final static String DIRECTORY_PATH = System.getProperty("user.dir"); //TODO: maybe changer le chemin ?
+    private FenetrePrincipale f;
+    public final static String DIRECTORY_PATH = System.getProperty("user.dir");
 
     public Simulateur(Environnement _env, Ordonnanceur _ord){
         env = _env;
         ord = _ord;
+    }
+
+    public void setFenetre(FenetrePrincipale f){
+        this.f = f;
     }
 
     public void modeManuel() {
@@ -55,7 +60,6 @@ public class Simulateur {
 
 
     public void stop() {
-        System.out.println("stopping the execution");
         ord.setExit(true); // Arrête l'exécution
     }
 
@@ -153,14 +157,9 @@ public class Simulateur {
                     Object e = o.readObject();
                     if (e instanceof Environnement) {
                         en = (Environnement) e;
-                        // Affichage du sous-environnement
-                        System.out.println("Sous-environnement extrait:");
-                        for (int i = 0; i < en.getSizeX(); i++) {
-                            for (int j = 0; j < en.getSizeY(); j++) {
-                                System.out.print(en.getCase(i, j).getState() ? "1 " : "0 ");
-                            }
-                            System.out.println();
-                        }
+                        env.setAll(en);
+                        f.build();
+                        env.updateVue();
                     }
                     o.close();
                 } catch (ClassNotFoundException | IOException e) {
@@ -176,7 +175,6 @@ public class Simulateur {
         env.setSousEnv(sEnv, p);
     }
 
-    //TODO: enlever les messages de debug
     public List<Environnement> chargerEnvironnements() {
         List<Environnement> environnements = new ArrayList<>();
 
@@ -200,15 +198,6 @@ public class Simulateur {
                         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
                             Environnement env = (Environnement) ois.readObject();
                             System.out.println("Environnement chargé depuis le fichier: " + file.getName());
-
-                            // Affichage du sous-environnement pour debug
-                            System.out.println("Sous-environnement extrait de " + file.getName() + ":");
-                            for (int i = 0; i < env.getSizeX(); i++) {
-                                for (int j = 0; j < env.getSizeY(); j++) {
-                                    System.out.print(env.getCase(i, j).getState() ? "1 " : "0 ");
-                                }
-                                System.out.println();
-                            }
 
                             // Ajouter l'environnement à la liste
                             environnements.add(env);

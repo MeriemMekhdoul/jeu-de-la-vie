@@ -1,10 +1,5 @@
 package modele;
 
-import java.awt.*;
-import java.util.Scanner;
-
-import static java.lang.Thread.*;
-
 public class Ordonnanceur extends Thread {
 
     private long sleepTime;
@@ -39,7 +34,7 @@ public class Ordonnanceur extends Thread {
             }
         }
         System.out.println("Exécution terminée.");
-        //TODO: exit le programme ? car maintenant on peut toujours relancer avec ESPACE..
+        System.exit(0);
     }
 
     public void runManuel() {
