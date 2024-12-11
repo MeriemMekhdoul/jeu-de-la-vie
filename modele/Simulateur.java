@@ -1,5 +1,6 @@
 package modele;
-
+import javax.swing.JFileChooser;
+import java.awt.*;
 import java.io.*;
 
 public class Simulateur {
@@ -58,11 +59,28 @@ public class Simulateur {
         ord.setSleepTime(sleepTime);
     }
 
-    public void sauvegarderEcran(Position p1, Position p2) throws IOException {
+    public void sauvegarderEcran(Position p1, Position p2, String c) throws IOException {
         //sauvegarder l'etat actuel de la grille
         // Chemin du répertoire
-        File directory = new File(System.getProperty("user.home") + "\\JeuDeLaVie");//TODO: maybe changer le chemin ?
+        File directory = new File(System.getProperty("user.dir") + c);//TODO: maybe changer le chemin ?
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(directory);
+        int returnValue = fileChooser.showOpenDialog(null);
 
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try {
+                if (selectedFile.createNewFile()) {
+                    System.out.println("Fichier créé : " + selectedFile.getAbsolutePath());
+                } else {
+                    System.out.println("Le fichier existe déjà.");
+                }
+            } catch (IOException e) {
+                System.out.println("Erreur lors de la création du fichier : " + e.getMessage());
+            }
+            directory = selectedFile;
+        }
+        //Desktop.getDesktop().open(directory);
         // Vérifie si le répertoire existe, sinon le crée
         if (!directory.exists()) {
             if (directory.mkdirs()) {
@@ -92,8 +110,18 @@ public class Simulateur {
         }
     }
 
-    public Environnement chargerEcran() throws IOException {
-        File file= new File(System.getProperty("user.home") + "\\JeuDeLaVie\\screenSauvegarde.bin");//TODO: mettre en constante
+    public Environnement chargerEcran(String c) throws IOException {
+        File file= new File(System.getProperty("user.home") + c);//TODO: mettre en constante
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(file);
+        int returnValue = fileChooser.showOpenDialog(null);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            file = selectedFile;
+        }
+
+
         Environnement en = null;
 
         if(file.exists()) {

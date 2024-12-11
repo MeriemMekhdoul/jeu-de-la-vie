@@ -285,11 +285,21 @@ public class FenetrePrincipale extends JFrame implements Observer {
         saveItem.addActionListener(e -> {
             System.out.println("Sauvegarde...");
             System.out.println("ici");
+            try {
+                sm.sauvegarderEcran(new Position(0, 0), new Position(env.getSizeX(), env.getSizeY()),"\\ecran" );
+            }catch  (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             grid.requestFocusInWindow(); // Revenir sur la grille
         });
 
         loadItem.addActionListener(e -> {
             System.out.println("Chargement...");
+            try {
+                sEnv = sm.chargerEcran("\\ecran");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             grid.requestFocusInWindow(); // Revenir sur la grille
         });
 
@@ -339,7 +349,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
                     System.out.println("La sauvegarde prends :" + p1+"\n"+p2);
                     select=false;
                     try {
-                        sm.sauvegarderEcran(p1,p2);
+                        sm.sauvegarderEcran(p1,p2, "\\data");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -357,7 +367,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 if (!select){
                     select = true;
                     try {
-                        sEnv = sm.chargerEcran();
+                        sEnv = sm.chargerEcran("\\data");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
