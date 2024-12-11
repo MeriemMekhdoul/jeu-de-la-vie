@@ -2,7 +2,7 @@
 
 ## Etudiants
 
-MEKHDOUL Meriem - p2310195
+MEKHDOUL Meriem - p2310195\
 RODRIGUEZ Adam - p2109294
 
 ## Jeu de la vie
