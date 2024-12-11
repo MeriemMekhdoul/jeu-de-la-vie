@@ -2,8 +2,7 @@
 
 import modele.Environnement;
 import modele.Ordonnanceur;
-import modele.Position;
-import modele.Simulateur;
+import vue_controleur.Simulateur;
 import vue_controleur.FenetrePrincipale;
 
 import javax.swing.SwingUtilities;

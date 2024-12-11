@@ -3,7 +3,6 @@ package vue_controleur;
 
 import modele.Environnement;
 import modele.Position;
-import modele.Simulateur;
 import modele.MyColor;
 
 import java.awt.*;

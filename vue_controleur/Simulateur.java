@@ -1,4 +1,8 @@
-package modele;
+package vue_controleur;
+import modele.Environnement;
+import modele.Ordonnanceur;
+import modele.Position;
+
 import javax.swing.JFileChooser;
 import java.awt.*;
 import java.io.*;
