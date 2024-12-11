@@ -286,7 +286,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
             System.out.println("Sauvegarde...");
             System.out.println("ici");
             try {
-                sm.sauvegarderEcran(new Position(0, 0), new Position(env.getSizeX(), env.getSizeY()),"\\ecran" );
+                sm.sauvegarderEcran(new Position(0, 0), new Position(env.getSizeX()-1, env.getSizeY()-1),"\\ecran" );
             }catch  (IOException ex) {
                 throw new RuntimeException(ex);
             }

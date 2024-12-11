@@ -91,7 +91,8 @@ public class Simulateur {
         }
 
         // Création du fichier
-        File file = new File(directory,"screenSauvegarde.bin");
+        File file = directory;
+        //File file = new File(directory,"screenSauvegarde.bin");
         if (file.createNewFile()) {
             System.out.println("Fichier créé : " + file.getAbsolutePath());
         } else {
@@ -111,7 +112,7 @@ public class Simulateur {
     }
 
     public Environnement chargerEcran(String c) throws IOException {
-        File file= new File(System.getProperty("user.home") + c);//TODO: mettre en constante
+        File file= new File(System.getProperty("user.dir") + c);//TODO: mettre en constante
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(file);
         int returnValue = fileChooser.showOpenDialog(null);
