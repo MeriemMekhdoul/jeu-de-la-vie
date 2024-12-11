@@ -153,8 +153,9 @@ public class Simulateur {
                     Object e = o.readObject();
                     if (e instanceof Environnement) {
                         en = (Environnement) e;
-                        env.setAll(en);
-                        f.build();
+                        if (!env.setAll(en)) {
+                            f.build();
+                        }
                         env.updateVue();
                     }
                     o.close();

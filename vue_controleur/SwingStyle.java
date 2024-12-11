@@ -6,7 +6,7 @@ import java.awt.*;
 public class SwingStyle {
     public static void applyButtonStyle(JButton button) {
         button.setFocusable(false);
-        button.setBackground(new Color(184, 152, 194));
+        button.setBackground(new Color(173, 216, 230)); // Couleur normale
         button.setFont(new Font("Poppins", Font.BOLD, 12));
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createCompoundBorder(

@@ -203,7 +203,7 @@ public class Environnement extends Observable implements Runnable, Serializable 
      *
      * @param e l'environnement source.
      */
-    public void setAll(Environnement e) {
+    public boolean setAll(Environnement e) {
         // Vérification de la taille avant de copier les données
         if (this.sizeX == e.getSizeX() && this.sizeY == e.getSizeY()) {
 
@@ -213,6 +213,7 @@ public class Environnement extends Observable implements Runnable, Serializable 
                     this.tab[i][j].setState(e.getState(i,j));
                 }
             }
+            return true;
         } else {
             // Si les tailles ne correspondent pas, créer un nouvel environnement avec la taille de l'environnement source
             System.out.println("Les tailles des environnements ne correspondent pas, création d'un nouvel environnement.");
@@ -232,8 +233,8 @@ public class Environnement extends Observable implements Runnable, Serializable 
                     mapDonnees.put(c, new Position(i, j));
                 }
             }
+            return false;
         }
-
     }
 
     public void updateVue(){

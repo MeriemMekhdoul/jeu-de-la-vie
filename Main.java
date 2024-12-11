@@ -15,7 +15,7 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
 
-				Environnement e = new Environnement(4,4);
+				Environnement e = new Environnement(15,15);
 				Ordonnanceur o = new Ordonnanceur(Simulateur.simulationSpeed, e);
 
 				Simulateur s = new Simulateur(e,o);
