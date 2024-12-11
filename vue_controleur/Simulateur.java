@@ -64,10 +64,6 @@ public class Simulateur {
     }
 
 
-    public long getSleepTime() {//TODO: useless
-        return ord.getSleepTime();
-    }
-
     public void setSleepTime(long sleepTime) {
         ord.setSleepTime(sleepTime);
     }

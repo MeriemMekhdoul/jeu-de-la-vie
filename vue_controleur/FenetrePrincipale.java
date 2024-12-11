@@ -267,7 +267,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
     private JSlider setupSlider(){
 
         // Slider pour gérer la vitesse
-        JSlider speedSlider = new JSlider(0, 100, 50); //TODO: mettre des constantes
+        JSlider speedSlider = new JSlider(0, 100, 50);
         speedSlider.setFocusable(false);
         speedSlider.setMajorTickSpacing(25);
         speedSlider.setPaintTicks(true);
