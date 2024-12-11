@@ -3,7 +3,9 @@ import javax.swing.JFileChooser;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Simulateur {
     public static int simulationSpeed = 550; // Valeur par défaut
@@ -62,55 +64,68 @@ public class Simulateur {
         ord.setSleepTime(sleepTime);
     }
 
-    public void sauvegarderEcran(Position p1, Position p2, String c) throws IOException {
-        //sauvegarder l'etat actuel de la grille
+    public Environnement sauvegarderEcran(Position p1, Position p2, String c) throws IOException {
+        Environnement retour = null;
+
         // Chemin du répertoire
         File directory = new File(DIRECTORY_PATH + c);
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(directory);
-        int returnValue = fileChooser.showOpenDialog(null);
 
+        // Afficher le dialogue de sauvegarde
+        int returnValue = fileChooser.showSaveDialog(null); // showSaveDialog au lieu de showOpenDialog pour sauvegarde
+
+        // Si l'utilisateur a sélectionné un fichier
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            try {
-                if (selectedFile.createNewFile()) {
-                    System.out.println("Fichier créé : " + selectedFile.getAbsolutePath());
-                } else {
-                    System.out.println("Le fichier existe déjà.");
+
+            // Si le fichier n'existe pas, créez-le
+            if (!selectedFile.exists()) {
+                try {
+                    if (selectedFile.createNewFile()) {
+                        System.out.println("Fichier créé : " + selectedFile.getAbsolutePath());
+                    } else {
+                        System.out.println("Le fichier existe déjà : " + selectedFile.getAbsolutePath());
+                    }
+                } catch (IOException e) {
+                    System.out.println("Erreur lors de la création du fichier : " + e.getMessage());
+                    return null; // Si une erreur survient, on arrête la procédure
                 }
-            } catch (IOException e) {
-                System.out.println("Erreur lors de la création du fichier : " + e.getMessage());
-            }
-            directory = selectedFile;
-        }
-        // Vérifie si le répertoire existe, sinon le crée
-        if (!directory.exists()) {
-            if (directory.mkdirs()) {
-                System.out.println("Répertoire créé : " + directory.getAbsolutePath());
             } else {
-                throw new IOException("Impossible de créer le répertoire : " + directory.getAbsolutePath());
+                System.out.println("Le fichier existe déjà : " + selectedFile.getAbsolutePath());
             }
-        }
 
-        // Création du fichier
-        File file = directory;
-        //File file = new File(directory,"screenSauvegarde.bin");
-        if (file.createNewFile()) {
-            System.out.println("Fichier créé : " + file.getAbsolutePath());
+            // Vérifie si le répertoire existe, sinon le crée
+            File parentDirectory = selectedFile.getParentFile();
+            if (!parentDirectory.exists()) {
+                if (parentDirectory.mkdirs()) {
+                    System.out.println("Répertoire créé : " + parentDirectory.getAbsolutePath());
+                } else {
+                    System.out.println("Impossible de créer le répertoire : " + parentDirectory.getAbsolutePath());
+                    return null; // Si le répertoire ne peut pas être créé, on arrête la procédure
+                }
+            }
+
+            // Sauvegarde l'environnement dans le fichier sélectionné
+            if (selectedFile.canWrite()) {
+                try (ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(selectedFile))) {
+                    Environnement sEnv = env.getSousEnv(p1, p2); // Extraction de l'environnement
+                    retour = sEnv;
+                    o.writeObject(sEnv);
+                    System.out.println("Environnement sauvegardé dans le fichier : " + selectedFile.getAbsolutePath());
+                } catch (IOException e) {
+                    System.out.println("Erreur lors de la sauvegarde dans le fichier : " + e.getMessage());
+                    throw new IOException("Erreur de sauvegarde : " + e.getMessage());
+                }
+            } else {
+                System.out.println("Le fichier n'est pas accessible en écriture : " + selectedFile.getAbsolutePath());
+            }
         } else {
-            System.out.println("Le fichier existe déjà : " + file.getAbsolutePath());
+            // Si l'utilisateur ferme l'explorateur sans sélectionner un fichier
+            System.out.println("Opération de sauvegarde annulée. Aucun fichier sélectionné.");
         }
 
-        if (file.canWrite()){
-            try {
-                ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(file));
-                Environnement sEnv = env.getSousEnv(p1,p2);
-                o.writeObject(sEnv);
-                o.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        return retour;
     }
 
     public Environnement chargerEcran(String c) throws IOException {
@@ -223,4 +238,7 @@ public class Simulateur {
 
         return environnements;
     }
+
+
+
 }
