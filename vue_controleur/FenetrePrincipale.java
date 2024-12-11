@@ -218,13 +218,46 @@ public class FenetrePrincipale extends JFrame implements Observer {
         setImportButton(importButton);
         SwingStyle.applyButtonStyle(importButton);
 
-        JList<String> itemList = new JList<>(new String[]{"Élément 1", "Élément 2", "Élément 3"});
-        itemList.setFocusable(false);
 
-        JScrollPane scrollPane = new JScrollPane(itemList);
+        DefaultListModel<Environnement> envListModel = new DefaultListModel<>();
+        envListModel.addElement(new Environnement(3, 3)); // Exemple
+        envListModel.addElement(new Environnement(4, 4)); // Exemple
 
+        // Création de la JList avec le modèle
+        JList<Environnement> envList = new JList<>(envListModel);
+
+        // Définir le renderer personnalisé pour afficher chaque environnement sous forme de grille
+        envList.setCellRenderer(new EnvListRenderer());
+
+        // Configurer la JList pour une colonne unique
+        envList.setVisibleRowCount(-1); // Affiche tous les éléments
+        envList.setFixedCellHeight(150); // Taille fixe pour chaque environnement
+        envList.setFixedCellWidth(150);  // Taille uniforme
+        envList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Optionnel : sélection unique
+
+        // Ajouter la JList dans un JScrollPane
+        JScrollPane scrollPane = new JScrollPane(envList);
+
+        // Ajouter la JList et le bouton d'importation au panneau d'importation
         importPanel.add(importButton, BorderLayout.NORTH);
         importPanel.add(scrollPane, BorderLayout.CENTER);
+
+/** ******************************************* */
+
+        // Ajouter un écouteur pour gérer les clics sur les éléments
+        envList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                int index = envList.locationToIndex(e.getPoint());
+                if (index >= 0) {
+                    Environnement selectedEnv = envListModel.get(index);
+                    System.out.println("Environnement cliqué : " + selectedEnv);
+                    // Logique pour gérer le clic
+                }
+                requestFocusOnWindow();
+            }
+        });
+/** ******************************************* */
 
         menuPanel.add(importPanel);
 
@@ -296,14 +329,14 @@ public class FenetrePrincipale extends JFrame implements Observer {
                 select=true;
                 }else if (!p1.equals(P0) && !p2.equals(P0)){
                     System.out.println("La sauvegarde prends :" + p1+"\n"+p2);
-                    p1.setPos(-1,-1);
-                    p2.setPos(-1,-1);
                     select=false;
-                    /*try {
+                    try {
                         sm.sauvegarderEcran(p1,p2);
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
-                    }*/
+                    }
+                    p1.setPos(-1,-1);
+                    p2.setPos(-1,-1);
                 }
             }
         });
