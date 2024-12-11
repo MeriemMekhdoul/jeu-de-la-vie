@@ -71,6 +71,14 @@ public class FenetrePrincipale extends JFrame implements Observer {
                         sm.blank();
                         break;
                     }
+                    case KeyEvent.VK_Z: {
+                        if (e.isControlDown()) {
+                            System.out.println("clicked on ctrl+Z");
+                            sm.previous();
+                        }
+                        break;
+                    }
+
                     case KeyEvent.VK_H: {
                         System.out.println("clicked on H");
                         System.out.println("Helper for the keybinds");

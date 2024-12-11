@@ -51,9 +51,21 @@ public class Environnement extends Observable implements Runnable, Serializable 
             }
         }
     }
+
+    public void prevState(){
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++) {
+                tab[i][j].usePrevState();
+            }
+        }
+        setChanged();
+        notifyObservers();
+    }
+
     public void nextState() {
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
+                tab[i][j].setPrevState();
                 tab[i][j].nextState();
             }
         }
@@ -62,6 +74,7 @@ public class Environnement extends Observable implements Runnable, Serializable 
     public void updateState() {
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
+                tab[i][j].setPrevState();
                 tab[i][j].updateState();
             }
         }
@@ -142,6 +155,9 @@ public class Environnement extends Observable implements Runnable, Serializable 
         setChanged();
         notifyObservers();
     }
+
+
+
 
     public void setAll(Environnement e) {
         // Vérification de la taille avant de copier les données
