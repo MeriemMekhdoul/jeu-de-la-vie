@@ -14,9 +14,8 @@ import java.awt.event.KeyEvent;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.*;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import javax.swing.*;
 
 import javax.swing.border.Border;
@@ -25,12 +24,16 @@ public class FenetrePrincipale extends JFrame implements Observer {
     boolean dessin =false;
     boolean select =false;
     static Position P0 = new Position(-1,-1);
-    Position p1 = new Position(-1,-1);
-    Position p2 = new Position(-1,-1);;
+    private Position p1 = new Position(-1,-1);
+    private Position p2 = new Position(-1,-1);;
     private JPanel[][] tab;
     private final Simulateur sm;
-    Environnement env;
-    Environnement sEnv;
+    private Environnement env;
+    private Environnement sEnv;
+    private List<Environnement> environnements = new ArrayList<>(); // Liste globale des environnements
+    private DefaultListModel<Environnement> envListModel = new DefaultListModel<>();
+    private JList<Environnement> envList = new JList<>(envListModel);
+    
 
     public FenetrePrincipale(Environnement _env, Simulateur _sm) {
         super();
@@ -186,16 +189,16 @@ public class FenetrePrincipale extends JFrame implements Observer {
         });
 
         SwingStyle.applyButtonStyle(BlankButton);
-        JButton btn3 = new JButton("Sauvegarde \r Zone");
-        setSauvegardeButton(btn3);
+        JButton sauvegardeButton = new JButton("Sauvegarde \r Zone");
+        setSauvegardeButton(sauvegardeButton);
 
-        SwingStyle.applyButtonStyle(btn3);
+        SwingStyle.applyButtonStyle(sauvegardeButton);
 
         menuPanel.add(resetButton);
         menuPanel.add(Box.createVerticalStrut(10)); // Espace
         menuPanel.add(BlankButton);
         menuPanel.add(Box.createVerticalStrut(10)); // Espace
-        menuPanel.add(btn3);
+        menuPanel.add(sauvegardeButton);
         menuPanel.add(Box.createVerticalStrut(20)); // Espace supplémentaire
 
         // Slider pour gérer la vitesse
@@ -227,17 +230,15 @@ public class FenetrePrincipale extends JFrame implements Observer {
         setImportButton(importButton);
         SwingStyle.applyButtonStyle(importButton);
 
-
-        List<Environnement> environnements = sm.chargerEnvironnements();
+        environnements = sm.chargerEnvironnements();
 
         // Création de la JList avec le modèle
-        DefaultListModel<Environnement> envListModel = new DefaultListModel<>();
         for (Environnement env : environnements) {
             envListModel.addElement(env);
         }
 
         // Création de la JList avec le modèle
-        JList<Environnement> envList = new JList<>(envListModel);
+        envList = new JList<>(envListModel);
 
         // Définir le renderer personnalisé pour afficher chaque environnement sous forme de grille
         envList.setCellRenderer(new EnvListRenderer());
@@ -254,18 +255,15 @@ public class FenetrePrincipale extends JFrame implements Observer {
         // Ajouter la JList et le bouton d'importation au panneau d'importation
         importPanel.add(importButton, BorderLayout.NORTH);
         importPanel.add(scrollPane, BorderLayout.CENTER);
-
-/** ******************************************* */
-
-        // Ajouter un écouteur pour gérer les clics sur les éléments
+        
+        // Ajouter un écouteur pour gérer les clics sur les éléments de la liste
         envList.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
+                select = !select;
                 int index = envList.locationToIndex(e.getPoint());
                 if (index >= 0) {
-                    Environnement selectedEnv = envListModel.get(index);
-                    System.out.println("Environnement cliqué : " + selectedEnv);
-                    // Logique pour gérer le clic
+                    sEnv = envListModel.get(index);
                 }
                 requestFocusOnWindow();
             }
@@ -289,7 +287,6 @@ public class FenetrePrincipale extends JFrame implements Observer {
 
         saveItem.addActionListener(e -> {
             System.out.println("Sauvegarde...");
-            System.out.println("ici");
             try {
                 sm.sauvegarderEcran(new Position(0, 0), new Position(env.getSizeX()-1, env.getSizeY()-1),"\\ecran" );
             }catch  (IOException ex) {
@@ -354,7 +351,11 @@ public class FenetrePrincipale extends JFrame implements Observer {
                     System.out.println("La sauvegarde prends :" + p1+"\n"+p2);
                     select=false;
                     try {
-                        sm.sauvegarderEcran(p1,p2, "\\data");
+                        Environnement en = sm.sauvegarderEcran(p1,p2, "\\data");
+                        if (en != null)
+                            addListItem(en);
+                        else 
+                            System.out.println("env retourné = null");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -364,19 +365,28 @@ public class FenetrePrincipale extends JFrame implements Observer {
             }
         });
     }
+    
+    private void addListItem(Environnement env){
+        // Ajouter l'environnement à la liste globale
+        environnements.add(env);
+
+        // Mise à jour de la JList
+        envListModel = (DefaultListModel<Environnement>) envList.getModel();
+
+        envListModel.addElement(env);
+
+        // Création de la JList avec le modèle
+        //envList = new JList<>(envListModel);
+
+        // Définir le renderer personnalisé pour afficher chaque environnement sous forme de grille
+        //envList.setCellRenderer(new EnvListRenderer());
+    }
 
     private void setImportButton(JButton button){
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (!select){
-                    select = true;
-                    try {
-                        sEnv = sm.chargerEcran("\\data");
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                } else if (!p1.equals(P0)){
+                if (select && !p1.equals(P0)){
                     select = false;
                     sm.setSousEnv(sEnv, p1);
                 }
