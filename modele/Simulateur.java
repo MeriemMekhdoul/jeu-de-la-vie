@@ -9,7 +9,7 @@ public class Simulateur {
     public static int simulationSpeed = 550; // Valeur par défaut
     private Environnement env;
     private Ordonnanceur ord;
-    public final static String DIRECTORY_PATH = System.getProperty("user.home") + "\\JeuDeLaVie"; //TODO: maybe changer le chemin ?
+    public final static String DIRECTORY_PATH = System.getProperty("user.dir"); //TODO: maybe changer le chemin ?
 
     public Simulateur(Environnement _env, Ordonnanceur _ord){
         env = _env;
@@ -65,7 +65,7 @@ public class Simulateur {
     public void sauvegarderEcran(Position p1, Position p2, String c) throws IOException {
         //sauvegarder l'etat actuel de la grille
         // Chemin du répertoire
-        File directory = new File(DIRECTORY_PATH + c);//TODO: maybe changer le chemin ?
+        File directory = new File(DIRECTORY_PATH + c);
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(directory);
         int returnValue = fileChooser.showOpenDialog(null);
@@ -83,7 +83,6 @@ public class Simulateur {
             }
             directory = selectedFile;
         }
-        //Desktop.getDesktop().open(directory);
         // Vérifie si le répertoire existe, sinon le crée
         if (!directory.exists()) {
             if (directory.mkdirs()) {
@@ -94,7 +93,8 @@ public class Simulateur {
         }
 
         // Création du fichier
-        File file = new File(directory,"screenSauvegarde.bin");
+        File file = directory;
+        //File file = new File(directory,"screenSauvegarde.bin");
         if (file.createNewFile()) {
             System.out.println("Fichier créé : " + file.getAbsolutePath());
         } else {
@@ -162,7 +162,7 @@ public class Simulateur {
         List<Environnement> environnements = new ArrayList<>();
 
         // Définir le chemin du répertoire des motifs
-        String homePath = DIRECTORY_PATH + "\\motifs"; // Supposons que 'motifs' est un dossier à créer
+        String homePath = DIRECTORY_PATH + "\\data"; // Supposons que 'motifs' est un dossier à créer
         File directory = new File(homePath);
 
         // Vérifier si le dossier existe
@@ -212,9 +212,9 @@ public class Simulateur {
             System.out.println("Le dossier n'existe pas ou n'est pas un répertoire valide. Je vais créer le dossier.");
             boolean created = directory.mkdirs(); // Crée le dossier "motifs"
             if (created) {
-                System.out.println("Le dossier 'motifs' a été créé avec succès.");
+                System.out.println("Le dossier 'data' a été créé avec succès.");
             } else {
-                System.out.println("Erreur lors de la création du dossier 'motifs'.");
+                System.out.println("Erreur lors de la création du dossier 'data'.");
             }
         }
 
