@@ -71,6 +71,14 @@ public class FenetrePrincipale extends JFrame implements Observer {
                         sm.blank();
                         break;
                     }
+                    case KeyEvent.VK_Z: {
+                        if (e.isControlDown()) {
+                            System.out.println("clicked on ctrl+Z");
+                            sm.previous();
+                        }
+                        break;
+                    }
+
                     case KeyEvent.VK_H: {
                         System.out.println("clicked on H");
                         System.out.println("Helper for the keybinds");
@@ -218,7 +226,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
         setImportButton(importButton);
         SwingStyle.applyButtonStyle(importButton);
 
-        JList<String> itemList = new JList<>(new String[]{"Élément 1", "Élément 2", "Élément 3"});
+        JList<String> itemList = new JList<>(new String[]{"Élément 1", "Élément 2", "Élément 3",});
         itemList.setFocusable(false);
 
         JScrollPane scrollPane = new JScrollPane(itemList);
@@ -299,11 +307,11 @@ public class FenetrePrincipale extends JFrame implements Observer {
                     p1.setPos(-1,-1);
                     p2.setPos(-1,-1);
                     select=false;
-                    /*try {
+                    try {
                         sm.sauvegarderEcran(p1,p2);
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
-                    }*/
+                    }
                 }
             }
         });

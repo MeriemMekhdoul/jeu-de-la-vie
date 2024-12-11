@@ -16,7 +16,7 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
 
-				Environnement e = new Environnement(10,10);
+				Environnement e = new Environnement(3,3);
 				Ordonnanceur o = new Ordonnanceur(Simulateur.simulationSpeed, e);
 
 				Simulateur s = new Simulateur(e,o);
@@ -27,7 +27,7 @@ public class Main {
 
 				o.start();
 
-				// Définition des positions pour le sous-environnement
+				/*// Définition des positions pour le sous-environnement
 				Position p1 = new Position(2, 2);
 				Position p2 = new Position(5, 5);
 
@@ -54,7 +54,7 @@ public class Main {
 						System.out.print(e.getCase(i, j).getState() ? "1 " : "0 ");
 					}
 					System.out.println();
-				}
+				}*/
 			}
 		});
 

@@ -39,6 +39,11 @@ public class Simulateur {
         modeManuel();
     }
 
+    public void previous() {
+        env.prevState();
+    }
+
+
     public void stop() {
         System.out.println("stopping the execution");
         ord.setExit(true); // Arrête l'exécution

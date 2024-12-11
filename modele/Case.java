@@ -1,11 +1,10 @@
 package modele;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Case implements Serializable {
-
+    private boolean prevState;
     private boolean state;
     private boolean nextState;
 
@@ -33,6 +32,16 @@ public class Case implements Serializable {
         state = rnd.nextBoolean();
     }
 
+
+    public void setPrevState()
+    {
+        prevState = state;
+    }
+
+    public void usePrevState()
+    {
+        state = prevState;
+    }
 
     public void nextState() {
         int nb = env.getNbCases(this);
