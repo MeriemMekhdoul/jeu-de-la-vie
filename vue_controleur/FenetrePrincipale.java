@@ -14,7 +14,6 @@ import java.awt.event.KeyEvent;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
@@ -228,13 +227,9 @@ public class FenetrePrincipale extends JFrame implements Observer {
         SwingStyle.applyButtonStyle(importButton);
 
 
-        List<Environnement> environnements = sm.chargerEnvironnements();
-
-        // Création de la JList avec le modèle
         DefaultListModel<Environnement> envListModel = new DefaultListModel<>();
-        for (Environnement env : environnements) {
-            envListModel.addElement(env);
-        }
+        envListModel.addElement(new Environnement(3, 3)); // Exemple
+        envListModel.addElement(new Environnement(4, 4)); // Exemple
 
         // Création de la JList avec le modèle
         JList<Environnement> envList = new JList<>(envListModel);
